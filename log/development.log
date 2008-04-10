@@ -1,0 +1,3521 @@
+  [4;36;1mSQL (0.001291)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000810)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000998)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000689)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001929)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.001801)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000869)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.005884)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.006161)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.006679)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.006682)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002819)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002471)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002525)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004492)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.005751)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.004152)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002456)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002044)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002974)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005993)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.004367)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002121)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002122)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002822)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004932)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004274)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002138)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.001992)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002767)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005263)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.006113)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002075)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002069)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002824)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.007852)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004255)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002616)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.001806)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.004055)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005811)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004378)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.003158)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001740)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001770)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.002628)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000870)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000798)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001677)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.002809)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001733)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.006417)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.005790)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.007404)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.007313)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.005823)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002757)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002621)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005052)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003416)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.004190)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002091)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002409)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002741)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005613)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.004193)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002262)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002103)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.005321)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005564)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004093)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002500)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.005245)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002594)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004635)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.004156)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002086)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002643)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002889)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005620)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004291)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002434)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.001840)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002817)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004980)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.005533)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002147)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001776)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001249)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000777)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000846)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000787)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.004385)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.004296)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "directories" does not exist
+: DROP TABLE directories[0m
+  [4;35;1mSQL (0.176273)[0m   [0mCREATE TABLE directories ("id" serial primary key, "modified" timestamp DEFAULT NULL, "parent_id" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "name" character varying(255) NOT NULL, "server_id" integer NOT NULL, "level" integer NOT NULL, "path" character varying(8192) NOT NULL, "bytes" integer DEFAULT 0 NOT NULL, "blocks" integer DEFAULT 0 NOT NULL, "count" integer DEFAULT 0 NOT NULL, "cache_valid" boolean DEFAULT 'f' NOT NULL) [0m
+  [4;36;1mSQL (0.005739)[0m   [0;1mCREATE INDEX "directories_server_id" ON directories ("server_id")[0m
+  [4;35;1mSQL (0.005823)[0m   [0mCREATE INDEX "index_directories_on_level" ON directories ("level")[0m
+  [4;36;1mSQL (0.005140)[0m   [0;1mCREATE INDEX "index_directories_on_lft" ON directories ("lft")[0m
+  [4;35;1mSQL (0.011027)[0m   [0mCREATE UNIQUE INDEX "index_directories_on_path_and_server_id" ON directories ("server_id", "path")[0m
+  [4;36;1mSQL (0.005457)[0m   [0;1mCREATE INDEX "index_directories_on_rgt" ON directories ("rgt")[0m
+  [4;35;1mSQL (0.002120)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "file_metadata_strings" does not exist
+: DROP TABLE file_metadata_strings[0m
+  [4;35;1mSQL (0.003401)[0m   [0mCREATE TABLE file_metadata_strings ("file_id" integer NOT NULL, "metadata_string_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.002262)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "files" does not exist
+: DROP TABLE files[0m
+  [4;36;1mSQL (0.014262)[0m   [0;1mCREATE TABLE files ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "modified" timestamp DEFAULT NULL, "bytes" integer DEFAULT NULL, "uid" integer DEFAULT NULL, "gid" integer DEFAULT NULL, "directory_id" integer NOT NULL, "blocks" integer DEFAULT 0 NOT NULL) [0m
+  [4;35;1mSQL (0.005995)[0m   [0mCREATE INDEX "files_name_idx" ON files ("name")[0m
+  [4;36;1mSQL (0.005745)[0m   [0;1mCREATE INDEX "index_file_info_on_directory_id" ON files ("directory_id")[0m
+  [4;35;1mSQL (0.002478)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_attributes" does not exist
+: DROP TABLE metadata_attributes[0m
+  [4;35;1mSQL (0.016268)[0m   [0mCREATE TABLE metadata_attributes ("id" serial primary key, "name" character varying(255) NOT NULL, "plugin_descriptor_id" integer NOT NULL) [0m
+  [4;36;1mSQL (0.005423)[0m   [0;1mCREATE UNIQUE INDEX "metadata_attributes_name_plugin_id_revision" ON metadata_attributes ("name", "plugin_descriptor_id")[0m
+  [4;35;1mSQL (0.003791)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_strings" does not exist
+: DROP TABLE metadata_strings[0m
+  [4;35;1mSQL (0.011501)[0m   [0mCREATE TABLE metadata_strings ("id" serial primary key, "metadata_attribute_id" integer NOT NULL, "value" character varying(255) NOT NULL) [0m
+  [4;36;1mSQL (0.002397)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "plugin_descriptors" does not exist
+: DROP TABLE plugin_descriptors[0m
+  [4;36;1mSQL (0.021523)[0m   [0;1mCREATE TABLE plugin_descriptors ("id" serial primary key, "name" character varying(64) NOT NULL, "version" integer NOT NULL, "code" bytea NOT NULL, "sha1_signature" bytea NOT NULL) [0m
+  [4;35;1mSQL (0.006046)[0m   [0mCREATE UNIQUE INDEX "plugin_descriptors_unique_name" ON plugin_descriptors ("name")[0m
+  [4;36;1mSQL (0.002590)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "servers" does not exist
+: DROP TABLE servers[0m
+  [4;36;1mSQL (0.575250)[0m   [0;1mCREATE TABLE servers ("id" serial primary key, "name" character varying(255) NOT NULL, "heartbeat_interval" integer DEFAULT 300 NOT NULL, "heartbeat_time" timestamp DEFAULT NULL, "update_interval" integer DEFAULT 300 NOT NULL, "last_update_finish_time" timestamp DEFAULT NULL, "daemon_version" character varying(128) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.006512)[0m   [0mCREATE UNIQUE INDEX "index_servers_on_name" ON servers ("name")[0m
+  [4;36;1mSQL (0.036907)[0m   [0;1mALTER TABLE directories ADD CONSTRAINT directories_servers_id_fk FOREIGN KEY (server_id) REFERENCES servers (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.009859)[0m   [0mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_file_id_fk FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.007820)[0m   [0;1mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_string_id_fk FOREIGN KEY (metadata_string_id) REFERENCES metadata_strings (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.007500)[0m   [0mALTER TABLE files ADD CONSTRAINT files_directories_id_fk FOREIGN KEY (directory_id) REFERENCES directories (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.010872)[0m   [0;1mALTER TABLE metadata_attributes ADD CONSTRAINT metadata_attribute_plugin_descriptor_id_fk FOREIGN KEY (plugin_descriptor_id) REFERENCES plugin_descriptors (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.011215)[0m   [0mALTER TABLE metadata_strings ADD CONSTRAINT metadata_string_attribute_id_fk FOREIGN KEY (metadata_attribute_id) REFERENCES metadata_attributes (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.004316)[0m   [0;1mCREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.002614)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.008515)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002731)[0m   [0mUPDATE schema_info SET version = 57[0m
+  [4;36;1mSQL (0.001316)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000852)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.001265)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000729)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001560)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.002111)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000942)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.006583)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.006533)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.009583)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.007039)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.004072)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002755)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002909)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004509)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003353)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.003769)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002007)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002513)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002823)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004951)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.005056)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002442)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002073)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002713)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.007475)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004205)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002157)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002046)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002556)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005455)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.003841)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002191)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002760)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002552)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005163)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004395)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002105)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002005)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002536)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005089)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004330)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002033)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001757)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001439)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000816)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.001012)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000709)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001528)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.001637)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000864)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.006768)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.005721)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.006694)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.009964)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002785)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002814)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002707)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004905)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003391)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.003868)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002500)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002260)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002597)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005893)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.004618)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002215)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002383)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002645)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004923)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004458)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002115)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002124)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002762)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005854)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.005292)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002193)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002640)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002703)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005418)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004079)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002140)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002020)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002446)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004806)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004360)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002068)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002077)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001597)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000904)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000947)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000703)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001479)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.002127)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000878)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.006755)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.005854)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.007041)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.006500)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002454)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002169)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002402)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.007984)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003742)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.005278)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002276)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002529)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002536)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005235)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.004012)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002040)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002243)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002453)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005199)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004961)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002452)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002319)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002634)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005208)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.003946)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002162)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.004815)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002844)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004856)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004489)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002105)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.003104)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002530)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005080)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.003961)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002216)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002325)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001872)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000974)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.001006)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000957)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.002610)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.006812)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "directories" does not exist
+: DROP TABLE directories[0m
+  [4;35;1mSQL (0.038270)[0m   [0mCREATE TABLE directories ("id" serial primary key, "modified" timestamp DEFAULT NULL, "parent_id" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "name" character varying(255) NOT NULL, "server_id" integer NOT NULL, "level" integer NOT NULL, "path" character varying(8192) NOT NULL, "bytes" integer DEFAULT 0 NOT NULL, "blocks" integer DEFAULT 0 NOT NULL, "count" integer DEFAULT 0 NOT NULL, "cache_valid" boolean DEFAULT 'f' NOT NULL) [0m
+  [4;36;1mSQL (0.008452)[0m   [0;1mCREATE INDEX "directories_server_id" ON directories ("server_id")[0m
+  [4;35;1mSQL (0.006212)[0m   [0mCREATE INDEX "index_directories_on_level" ON directories ("level")[0m
+  [4;36;1mSQL (0.005700)[0m   [0;1mCREATE INDEX "index_directories_on_lft" ON directories ("lft")[0m
+  [4;35;1mSQL (0.007183)[0m   [0mCREATE UNIQUE INDEX "index_directories_on_path_and_server_id" ON directories ("server_id", "path")[0m
+  [4;36;1mSQL (0.005452)[0m   [0;1mCREATE INDEX "index_directories_on_rgt" ON directories ("rgt")[0m
+  [4;35;1mSQL (0.003073)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "file_metadata_strings" does not exist
+: DROP TABLE file_metadata_strings[0m
+  [4;35;1mSQL (0.002915)[0m   [0mCREATE TABLE file_metadata_strings ("file_id" integer NOT NULL, "metadata_string_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.002149)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "files" does not exist
+: DROP TABLE files[0m
+  [4;36;1mSQL (0.013611)[0m   [0;1mCREATE TABLE files ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "modified" timestamp DEFAULT NULL, "bytes" integer DEFAULT NULL, "uid" integer DEFAULT NULL, "gid" integer DEFAULT NULL, "directory_id" integer NOT NULL, "blocks" integer DEFAULT 0 NOT NULL) [0m
+  [4;35;1mSQL (0.007775)[0m   [0mCREATE INDEX "files_name_idx" ON files ("name")[0m
+  [4;36;1mSQL (0.005065)[0m   [0;1mCREATE INDEX "index_file_info_on_directory_id" ON files ("directory_id")[0m
+  [4;35;1mSQL (0.002172)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_attributes" does not exist
+: DROP TABLE metadata_attributes[0m
+  [4;35;1mSQL (0.013069)[0m   [0mCREATE TABLE metadata_attributes ("id" serial primary key, "name" character varying(255) NOT NULL, "plugin_descriptor_id" integer NOT NULL) [0m
+  [4;36;1mSQL (0.005643)[0m   [0;1mCREATE UNIQUE INDEX "metadata_attributes_name_plugin_id_revision" ON metadata_attributes ("name", "plugin_descriptor_id")[0m
+  [4;35;1mSQL (0.002122)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_strings" does not exist
+: DROP TABLE metadata_strings[0m
+  [4;35;1mSQL (0.014915)[0m   [0mCREATE TABLE metadata_strings ("id" serial primary key, "metadata_attribute_id" integer NOT NULL, "value" character varying(255) NOT NULL) [0m
+  [4;36;1mSQL (0.002494)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "plugin_descriptors" does not exist
+: DROP TABLE plugin_descriptors[0m
+  [4;36;1mSQL (0.021662)[0m   [0;1mCREATE TABLE plugin_descriptors ("id" serial primary key, "name" character varying(64) NOT NULL, "version" integer NOT NULL, "code" bytea NOT NULL, "sha1_signature" bytea NOT NULL) [0m
+  [4;35;1mSQL (0.006282)[0m   [0mCREATE UNIQUE INDEX "plugin_descriptors_unique_name" ON plugin_descriptors ("name")[0m
+  [4;36;1mSQL (0.002169)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "servers" does not exist
+: DROP TABLE servers[0m
+  [4;36;1mSQL (0.378138)[0m   [0;1mCREATE TABLE servers ("id" serial primary key, "name" character varying(255) NOT NULL, "heartbeat_interval" integer DEFAULT 300 NOT NULL, "heartbeat_time" timestamp DEFAULT NULL, "update_interval" integer DEFAULT 300 NOT NULL, "last_update_finish_time" timestamp DEFAULT NULL, "daemon_version" character varying(128) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.006794)[0m   [0mCREATE UNIQUE INDEX "index_servers_on_name" ON servers ("name")[0m
+  [4;36;1mSQL (0.013802)[0m   [0;1mALTER TABLE directories ADD CONSTRAINT directories_servers_id_fk FOREIGN KEY (server_id) REFERENCES servers (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.009936)[0m   [0mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_file_id_fk FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.007550)[0m   [0;1mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_string_id_fk FOREIGN KEY (metadata_string_id) REFERENCES metadata_strings (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.008501)[0m   [0mALTER TABLE files ADD CONSTRAINT files_directories_id_fk FOREIGN KEY (directory_id) REFERENCES directories (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.008642)[0m   [0;1mALTER TABLE metadata_attributes ADD CONSTRAINT metadata_attribute_plugin_descriptor_id_fk FOREIGN KEY (plugin_descriptor_id) REFERENCES plugin_descriptors (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.008778)[0m   [0mALTER TABLE metadata_strings ADD CONSTRAINT metadata_string_attribute_id_fk FOREIGN KEY (metadata_attribute_id) REFERENCES metadata_attributes (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.004414)[0m   [0;1mCREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.002724)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.008988)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002135)[0m   [0mUPDATE schema_info SET version = 57[0m
+  [4;36;1mSQL (0.001296)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000853)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.001157)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000790)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001651)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.001727)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000876)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.005904)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.006408)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.006671)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.008564)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002720)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002570)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.003048)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004831)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003518)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.003864)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002280)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002397)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002497)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005074)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.004161)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002119)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002033)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002560)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004917)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004087)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002216)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002028)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002517)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004673)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.004264)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002071)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002163)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002539)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004763)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004409)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002180)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.001762)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002890)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.006174)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004648)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002112)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001991)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001546)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000909)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000770)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000956)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.002049)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.005416)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "directories" does not exist
+: DROP TABLE directories[0m
+  [4;35;1mSQL (0.043037)[0m   [0mCREATE TABLE directories ("id" serial primary key, "modified" timestamp DEFAULT NULL, "parent_id" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "name" character varying(255) NOT NULL, "server_id" integer NOT NULL, "level" integer NOT NULL, "path" character varying(8192) NOT NULL, "bytes" integer DEFAULT 0 NOT NULL, "blocks" integer DEFAULT 0 NOT NULL, "count" integer DEFAULT 0 NOT NULL, "cache_valid" boolean DEFAULT 'f' NOT NULL) [0m
+  [4;36;1mSQL (0.006115)[0m   [0;1mCREATE INDEX "directories_server_id" ON directories ("server_id")[0m
+  [4;35;1mSQL (0.006939)[0m   [0mCREATE INDEX "index_directories_on_level" ON directories ("level")[0m
+  [4;36;1mSQL (0.006592)[0m   [0;1mCREATE INDEX "index_directories_on_lft" ON directories ("lft")[0m
+  [4;35;1mSQL (0.007303)[0m   [0mCREATE UNIQUE INDEX "index_directories_on_path_and_server_id" ON directories ("server_id", "path")[0m
+  [4;36;1mSQL (0.008455)[0m   [0;1mCREATE INDEX "index_directories_on_rgt" ON directories ("rgt")[0m
+  [4;35;1mSQL (0.002444)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "file_metadata_strings" does not exist
+: DROP TABLE file_metadata_strings[0m
+  [4;35;1mSQL (0.003503)[0m   [0mCREATE TABLE file_metadata_strings ("file_id" integer NOT NULL, "metadata_string_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.002161)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "files" does not exist
+: DROP TABLE files[0m
+  [4;36;1mSQL (0.015081)[0m   [0;1mCREATE TABLE files ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "modified" timestamp DEFAULT NULL, "bytes" integer DEFAULT NULL, "uid" integer DEFAULT NULL, "gid" integer DEFAULT NULL, "directory_id" integer NOT NULL, "blocks" integer DEFAULT 0 NOT NULL) [0m
+  [4;35;1mSQL (0.011087)[0m   [0mCREATE INDEX "files_name_idx" ON files ("name")[0m
+  [4;36;1mSQL (0.005138)[0m   [0;1mCREATE INDEX "index_file_info_on_directory_id" ON files ("directory_id")[0m
+  [4;35;1mSQL (0.012720)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_attributes" does not exist
+: DROP TABLE metadata_attributes[0m
+  [4;35;1mSQL (0.033971)[0m   [0mCREATE TABLE metadata_attributes ("id" serial primary key, "name" character varying(255) NOT NULL, "plugin_descriptor_id" integer NOT NULL) [0m
+  [4;36;1mSQL (0.006642)[0m   [0;1mCREATE UNIQUE INDEX "metadata_attributes_name_plugin_id_revision" ON metadata_attributes ("name", "plugin_descriptor_id")[0m
+  [4;35;1mSQL (0.002436)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_strings" does not exist
+: DROP TABLE metadata_strings[0m
+  [4;35;1mSQL (0.013700)[0m   [0mCREATE TABLE metadata_strings ("id" serial primary key, "metadata_attribute_id" integer NOT NULL, "value" character varying(255) NOT NULL) [0m
+  [4;36;1mSQL (0.002425)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "plugin_descriptors" does not exist
+: DROP TABLE plugin_descriptors[0m
+  [4;36;1mSQL (0.028792)[0m   [0;1mCREATE TABLE plugin_descriptors ("id" serial primary key, "name" character varying(64) NOT NULL, "version" integer NOT NULL, "code" bytea NOT NULL, "sha1_signature" bytea NOT NULL) [0m
+  [4;35;1mSQL (0.007796)[0m   [0mCREATE UNIQUE INDEX "plugin_descriptors_unique_name" ON plugin_descriptors ("name")[0m
+  [4;36;1mSQL (0.029689)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "servers" does not exist
+: DROP TABLE servers[0m
+  [4;36;1mSQL (0.017687)[0m   [0;1mCREATE TABLE servers ("id" serial primary key, "name" character varying(255) NOT NULL, "heartbeat_interval" integer DEFAULT 300 NOT NULL, "heartbeat_time" timestamp DEFAULT NULL, "update_interval" integer DEFAULT 300 NOT NULL, "last_update_finish_time" timestamp DEFAULT NULL, "daemon_version" character varying(128) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.011822)[0m   [0mCREATE UNIQUE INDEX "index_servers_on_name" ON servers ("name")[0m
+  [4;36;1mSQL (0.034842)[0m   [0;1mALTER TABLE directories ADD CONSTRAINT directories_servers_id_fk FOREIGN KEY (server_id) REFERENCES servers (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.408129)[0m   [0mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_file_id_fk FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.008369)[0m   [0;1mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_string_id_fk FOREIGN KEY (metadata_string_id) REFERENCES metadata_strings (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.007620)[0m   [0mALTER TABLE files ADD CONSTRAINT files_directories_id_fk FOREIGN KEY (directory_id) REFERENCES directories (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.009449)[0m   [0;1mALTER TABLE metadata_attributes ADD CONSTRAINT metadata_attribute_plugin_descriptor_id_fk FOREIGN KEY (plugin_descriptor_id) REFERENCES plugin_descriptors (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.008227)[0m   [0mALTER TABLE metadata_strings ADD CONSTRAINT metadata_string_attribute_id_fk FOREIGN KEY (metadata_attribute_id) REFERENCES metadata_attributes (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.003906)[0m   [0;1mCREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.002633)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.009769)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.009743)[0m   [0mUPDATE schema_info SET version = 57[0m
+  [4;36;1mSQL (0.001540)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000984)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.001172)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000852)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001552)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.001671)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001276)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.006022)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.006292)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.006790)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.007139)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002794)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002356)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002842)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004905)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.003365)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.003828)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002385)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002485)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002430)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.006067)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.003999)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002154)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002175)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002772)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005094)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.004295)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002080)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002068)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.004969)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005010)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.005203)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002210)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002144)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002754)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.004784)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.004611)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002074)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.001917)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002588)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004975)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004520)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002038)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001832)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001262)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.001350)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000989)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000737)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.002245)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.005248)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "directories" does not exist
+: DROP TABLE directories[0m
+  [4;35;1mSQL (0.044344)[0m   [0mCREATE TABLE directories ("id" serial primary key, "modified" timestamp DEFAULT NULL, "parent_id" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "name" character varying(255) NOT NULL, "server_id" integer NOT NULL, "level" integer NOT NULL, "path" character varying(8192) NOT NULL, "bytes" integer DEFAULT 0 NOT NULL, "blocks" integer DEFAULT 0 NOT NULL, "count" integer DEFAULT 0 NOT NULL, "cache_valid" boolean DEFAULT 'f' NOT NULL) [0m
+  [4;36;1mSQL (0.021435)[0m   [0;1mCREATE INDEX "directories_server_id" ON directories ("server_id")[0m
+  [4;35;1mSQL (0.006623)[0m   [0mCREATE INDEX "index_directories_on_level" ON directories ("level")[0m
+  [4;36;1mSQL (0.005584)[0m   [0;1mCREATE INDEX "index_directories_on_lft" ON directories ("lft")[0m
+  [4;35;1mSQL (0.009925)[0m   [0mCREATE UNIQUE INDEX "index_directories_on_path_and_server_id" ON directories ("server_id", "path")[0m
+  [4;36;1mSQL (0.006080)[0m   [0;1mCREATE INDEX "index_directories_on_rgt" ON directories ("rgt")[0m
+  [4;35;1mSQL (0.002816)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "file_metadata_strings" does not exist
+: DROP TABLE file_metadata_strings[0m
+  [4;35;1mSQL (0.004350)[0m   [0mCREATE TABLE file_metadata_strings ("file_id" integer NOT NULL, "metadata_string_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.002312)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "files" does not exist
+: DROP TABLE files[0m
+  [4;36;1mSQL (0.013121)[0m   [0;1mCREATE TABLE files ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "modified" timestamp DEFAULT NULL, "bytes" integer DEFAULT NULL, "uid" integer DEFAULT NULL, "gid" integer DEFAULT NULL, "directory_id" integer NOT NULL, "blocks" integer DEFAULT 0 NOT NULL) [0m
+  [4;35;1mSQL (0.011634)[0m   [0mCREATE INDEX "files_name_idx" ON files ("name")[0m
+  [4;36;1mSQL (0.005497)[0m   [0;1mCREATE INDEX "index_file_info_on_directory_id" ON files ("directory_id")[0m
+  [4;35;1mSQL (0.013127)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_attributes" does not exist
+: DROP TABLE metadata_attributes[0m
+  [4;35;1mSQL (0.079691)[0m   [0mCREATE TABLE metadata_attributes ("id" serial primary key, "name" character varying(255) NOT NULL, "plugin_descriptor_id" integer NOT NULL) [0m
+  [4;36;1mSQL (0.099273)[0m   [0;1mCREATE UNIQUE INDEX "metadata_attributes_name_plugin_id_revision" ON metadata_attributes ("name", "plugin_descriptor_id")[0m
+  [4;35;1mSQL (0.002246)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_strings" does not exist
+: DROP TABLE metadata_strings[0m
+  [4;35;1mSQL (0.018060)[0m   [0mCREATE TABLE metadata_strings ("id" serial primary key, "metadata_attribute_id" integer NOT NULL, "value" character varying(255) NOT NULL) [0m
+  [4;36;1mSQL (0.002288)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "plugin_descriptors" does not exist
+: DROP TABLE plugin_descriptors[0m
+  [4;36;1mSQL (0.072421)[0m   [0;1mCREATE TABLE plugin_descriptors ("id" serial primary key, "name" character varying(64) NOT NULL, "version" integer NOT NULL, "code" bytea NOT NULL, "sha1_signature" bytea NOT NULL) [0m
+  [4;35;1mSQL (0.021935)[0m   [0mCREATE UNIQUE INDEX "plugin_descriptors_unique_name" ON plugin_descriptors ("name")[0m
+  [4;36;1mSQL (0.002662)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "servers" does not exist
+: DROP TABLE servers[0m
+  [4;36;1mSQL (0.074942)[0m   [0;1mCREATE TABLE servers ("id" serial primary key, "name" character varying(255) NOT NULL, "heartbeat_interval" integer DEFAULT 300 NOT NULL, "heartbeat_time" timestamp DEFAULT NULL, "update_interval" integer DEFAULT 300 NOT NULL, "last_update_finish_time" timestamp DEFAULT NULL, "daemon_version" character varying(128) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.017579)[0m   [0mCREATE UNIQUE INDEX "index_servers_on_name" ON servers ("name")[0m
+  [4;36;1mSQL (0.009196)[0m   [0;1mALTER TABLE directories ADD CONSTRAINT directories_servers_id_fk FOREIGN KEY (server_id) REFERENCES servers (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.007466)[0m   [0mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_file_id_fk FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.006366)[0m   [0;1mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_string_id_fk FOREIGN KEY (metadata_string_id) REFERENCES metadata_strings (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.007724)[0m   [0mALTER TABLE files ADD CONSTRAINT files_directories_id_fk FOREIGN KEY (directory_id) REFERENCES directories (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.006420)[0m   [0;1mALTER TABLE metadata_attributes ADD CONSTRAINT metadata_attribute_plugin_descriptor_id_fk FOREIGN KEY (plugin_descriptor_id) REFERENCES plugin_descriptors (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.006341)[0m   [0mALTER TABLE metadata_strings ADD CONSTRAINT metadata_string_attribute_id_fk FOREIGN KEY (metadata_attribute_id) REFERENCES metadata_attributes (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.007142)[0m   [0;1mCREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.002377)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.007083)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001873)[0m   [0mUPDATE schema_info SET version = 57[0m
+  [4;36;1mSQL (0.001563)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.000829)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000747)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000696)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.001505)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.001715)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001451)[0m   [0;1mSHOW search_path[0m
+  [4;35;1mSQL (0.005566)[0m   [0m SELECT tablename
+ FROM pg_tables
+ WHERE schemaname IN (E'"$user"',E'public')
+[0m
+  [4;36;1mSQL (0.006788)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'directories'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.007077)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'directories'::regclass
+[0m
+  [4;36;1mSQL (0.006159)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'directories'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002350)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'directories'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002328)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;35;1mSQL (0.002402)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'file_metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.004845)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'file_metadata_strings'::regclass
+[0m
+  [4;35;1mPK and custom sequence (0.004518)[0m   [0m SELECT attr.attname, split_part(def.adsrc, '''', 2)
+ FROM pg_class t
+ JOIN pg_attribute attr ON (t.oid = attrelid)
+ JOIN pg_attrdef def ON (adrelid = attrelid AND adnum = attnum)
+ JOIN pg_constraint cons ON (conrelid = adrelid AND adnum = conkey[1])
+ WHERE t.oid = 'file_metadata_strings'::regclass
+ AND cons.contype = 'p'
+ AND def.adsrc ~* 'nextval'
+[0m
+  [4;36;1mSQL (0.004965)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'file_metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002018)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'file_metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002467)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;35;1mSQL (0.002577)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'files'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005331)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'files'::regclass
+[0m
+  [4;35;1mSQL (0.003993)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'files'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002010)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'files'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.004328)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;36;1mSQL (0.002428)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_attributes'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005265)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_attributes'::regclass
+[0m
+  [4;36;1mSQL (0.003918)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_attributes'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002353)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_attributes'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.004107)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;35;1mSQL (0.002420)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'metadata_strings'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.005183)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'metadata_strings'::regclass
+[0m
+  [4;35;1mSQL (0.003962)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'metadata_strings'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.002099)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'metadata_strings'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.002198)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.002451)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'plugin_descriptors'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mPK and serial sequence (0.005327)[0m   [0m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'plugin_descriptors'::regclass
+[0m
+  [4;36;1mSQL (0.003954)[0m   [0;1m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'plugin_descriptors'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;35;1mSQL (0.002098)[0m   [0m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'plugin_descriptors'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;36;1mSQL (0.002190)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.002481)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'servers'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.006339)[0m   [0;1m SELECT attr.attname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'servers'::regclass
+[0m
+  [4;35;1mSQL (0.004177)[0m   [0m SELECT i.relname, d.indisunique, a.attname
+ FROM pg_class t, pg_class i, pg_index d, pg_attribute a
+ WHERE i.relkind = 'i'
+ AND d.indexrelid = i.oid
+ AND d.indisprimary = 'f'
+ AND t.oid = d.indrelid
+ AND t.relname = 'servers'
+ AND a.attrelid = t.oid
+ AND ( d.indkey[0]=a.attnum OR d.indkey[1]=a.attnum
+ OR d.indkey[2]=a.attnum OR d.indkey[3]=a.attnum
+ OR d.indkey[4]=a.attnum OR d.indkey[5]=a.attnum
+ OR d.indkey[6]=a.attnum OR d.indkey[7]=a.attnum
+ OR d.indkey[8]=a.attnum OR d.indkey[9]=a.attnum )
+ ORDER BY i.relname
+[0m
+  [4;36;1mSQL (0.004496)[0m   [0;1m SELECT c2.relname, i.indisunique, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true)
+ FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
+ WHERE c.relname = 'servers'
+ AND c.oid = i.indrelid AND i.indexrelid = c2.oid
+ AND i.indisprimary = 'f'
+ AND i.indexprs IS NOT NULL
+ ORDER BY 1
+[0m
+  [4;35;1mSQL (0.001839)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t.relname
+ FROM pg_class t, pg_constraint f
+ WHERE f.conrelid = t.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;36;1mSQL (0.001570)[0m   [0;1mSHOW client_min_messages[0m
+  [4;35;1mSQL (0.001248)[0m   [0mSET client_min_messages TO 'panic'[0m
+  [4;36;1mSQL (0.000973)[0m   [0;1mSHOW standard_conforming_strings[0m
+  [4;35;1mSQL (0.000941)[0m   [0mSET client_min_messages TO 'notice'[0m
+  [4;36;1mSQL (0.002593)[0m   [0;1mSELECT version()[0m
+  [4;35;1mSQL (0.007089)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'directories'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "directories" does not exist
+: DROP TABLE directories[0m
+  [4;35;1mSQL (0.040056)[0m   [0mCREATE TABLE directories ("id" serial primary key, "modified" timestamp DEFAULT NULL, "parent_id" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "name" character varying(255) NOT NULL, "server_id" integer NOT NULL, "level" integer NOT NULL, "path" character varying(8192) NOT NULL, "bytes" integer DEFAULT 0 NOT NULL, "blocks" integer DEFAULT 0 NOT NULL, "count" integer DEFAULT 0 NOT NULL, "cache_valid" boolean DEFAULT 'f' NOT NULL) [0m
+  [4;36;1mSQL (0.009440)[0m   [0;1mCREATE INDEX "directories_server_id" ON directories ("server_id")[0m
+  [4;35;1mSQL (0.006504)[0m   [0mCREATE INDEX "index_directories_on_level" ON directories ("level")[0m
+  [4;36;1mSQL (0.008365)[0m   [0;1mCREATE INDEX "index_directories_on_lft" ON directories ("lft")[0m
+  [4;35;1mSQL (0.006967)[0m   [0mCREATE UNIQUE INDEX "index_directories_on_path_and_server_id" ON directories ("server_id", "path")[0m
+  [4;36;1mSQL (0.005643)[0m   [0;1mCREATE INDEX "index_directories_on_rgt" ON directories ("rgt")[0m
+  [4;35;1mSQL (0.002145)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'file_metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "file_metadata_strings" does not exist
+: DROP TABLE file_metadata_strings[0m
+  [4;35;1mSQL (0.003406)[0m   [0mCREATE TABLE file_metadata_strings ("file_id" integer NOT NULL, "metadata_string_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.002392)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'files'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "files" does not exist
+: DROP TABLE files[0m
+  [4;36;1mSQL (0.014282)[0m   [0;1mCREATE TABLE files ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "modified" timestamp DEFAULT NULL, "bytes" integer DEFAULT NULL, "uid" integer DEFAULT NULL, "gid" integer DEFAULT NULL, "directory_id" integer NOT NULL, "blocks" integer DEFAULT 0 NOT NULL) [0m
+  [4;35;1mSQL (0.006067)[0m   [0mCREATE INDEX "files_name_idx" ON files ("name")[0m
+  [4;36;1mSQL (0.005500)[0m   [0;1mCREATE INDEX "index_file_info_on_directory_id" ON files ("directory_id")[0m
+  [4;35;1mSQL (0.002565)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_attributes'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_attributes" does not exist
+: DROP TABLE metadata_attributes[0m
+  [4;35;1mSQL (0.015214)[0m   [0mCREATE TABLE metadata_attributes ("id" serial primary key, "name" character varying(255) NOT NULL, "plugin_descriptor_id" integer NOT NULL) [0m
+  [4;36;1mSQL (0.005962)[0m   [0;1mCREATE UNIQUE INDEX "metadata_attributes_name_plugin_id_revision" ON metadata_attributes ("name", "plugin_descriptor_id")[0m
+  [4;35;1mSQL (0.002337)[0m   [0m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'metadata_strings'
+[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mPGError: ERROR: table "metadata_strings" does not exist
+: DROP TABLE metadata_strings[0m
+  [4;35;1mSQL (0.011894)[0m   [0mCREATE TABLE metadata_strings ("id" serial primary key, "metadata_attribute_id" integer NOT NULL, "value" character varying(255) NOT NULL) [0m
+  [4;36;1mSQL (0.002269)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'plugin_descriptors'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "plugin_descriptors" does not exist
+: DROP TABLE plugin_descriptors[0m
+  [4;36;1mSQL (0.022177)[0m   [0;1mCREATE TABLE plugin_descriptors ("id" serial primary key, "name" character varying(64) NOT NULL, "version" integer NOT NULL, "code" bytea NOT NULL, "sha1_signature" bytea NOT NULL) [0m
+  [4;35;1mSQL (0.005869)[0m   [0mCREATE UNIQUE INDEX "plugin_descriptors_unique_name" ON plugin_descriptors ("name")[0m
+  [4;36;1mSQL (0.002501)[0m   [0;1m SELECT f.conname, pg_get_constraintdef(f.oid), t2.relname
+ FROM pg_class t, pg_class t2, pg_constraint f
+ WHERE f.confrelid = t.oid
+ AND f.conrelid = t2.oid
+ AND f.contype = 'f'
+ AND t.relname = 'servers'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mPGError: ERROR: table "servers" does not exist
+: DROP TABLE servers[0m
+  [4;36;1mSQL (0.018710)[0m   [0;1mCREATE TABLE servers ("id" serial primary key, "name" character varying(255) NOT NULL, "heartbeat_interval" integer DEFAULT 300 NOT NULL, "heartbeat_time" timestamp DEFAULT NULL, "update_interval" integer DEFAULT 300 NOT NULL, "last_update_finish_time" timestamp DEFAULT NULL, "daemon_version" character varying(128) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.006739)[0m   [0mCREATE UNIQUE INDEX "index_servers_on_name" ON servers ("name")[0m
+  [4;36;1mSQL (0.012359)[0m   [0;1mALTER TABLE directories ADD CONSTRAINT directories_servers_id_fk FOREIGN KEY (server_id) REFERENCES servers (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.006721)[0m   [0mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_file_id_fk FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.005496)[0m   [0;1mALTER TABLE file_metadata_strings ADD CONSTRAINT file_metadata_string_id_fk FOREIGN KEY (metadata_string_id) REFERENCES metadata_strings (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.006254)[0m   [0mALTER TABLE files ADD CONSTRAINT files_directories_id_fk FOREIGN KEY (directory_id) REFERENCES directories (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.007914)[0m   [0;1mALTER TABLE metadata_attributes ADD CONSTRAINT metadata_attribute_plugin_descriptor_id_fk FOREIGN KEY (plugin_descriptor_id) REFERENCES plugin_descriptors (id) ON DELETE CASCADE[0m
+  [4;35;1mSQL (0.007569)[0m   [0mALTER TABLE metadata_strings ADD CONSTRAINT metadata_string_attribute_id_fk FOREIGN KEY (metadata_attribute_id) REFERENCES metadata_attributes (id) ON DELETE CASCADE[0m
+  [4;36;1mSQL (0.003649)[0m   [0;1mCREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.002383)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.008356)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001825)[0m   [0mUPDATE schema_info SET version = 57[0m
