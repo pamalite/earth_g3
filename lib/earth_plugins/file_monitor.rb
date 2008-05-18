@@ -286,7 +286,6 @@ private
       return 1
     end
 
-
     Earth::Directory::transaction do
 
       file_names, subdirectory_names, stats = [], [], Hash.new
@@ -315,6 +314,9 @@ private
           end
         end
       end
+      
+      # Ken : Added this for easy server ID access
+      server_id = directory.server_id
 
       if not options[:only_build_directories] then
         # By adding and removing files on the association, the cache of the association will be kept up to date
@@ -325,7 +327,7 @@ private
         end
         added_file_names.each do |name|
           # Ken: Begin getting usage space
-          user_usage = Earth::UsersSpaceUsage.find(:first, :conditions => [ " uid = ? AND server_id = ? ", stats[name].uid, server.id ])
+          user_usage = Earth::UsersSpaceUsage.find(:first, :conditions => [ " uid = ? AND server_id = ? ", stats[name].uid, server_id ])
           # Ken: End getting usage space
           
           Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
@@ -349,7 +351,7 @@ private
           
           directory_files.each do |file|
             # Ken: Begin getting space usage
-            user_usage = Earth::UsersSpaceUsage.find(:first, :conditions => [ " uid = ? AND server_id = ? ", stats[file.name].uid, server.id ])
+            user_usage = Earth::UsersSpaceUsage.find(:first, :conditions => [ " uid = ? AND server_id = ? ", file.uid, server_id ])
             # Ken: End getting space usage
             
             # If the file still exists
@@ -364,11 +366,11 @@ private
                 
                 # Ken: Begin creating/updating space usage
                 if user_usage == nil then
-                  logger.debug("update_non_recursive::not_initial_pass creating new space_usage with size: #{stats[name].size} for uid: #{stats[file.name].uid}")
-                  Earth::UsersSpaceUsage.create(:uid => stats[file.name].uid, :server_id => server.id, :space_usage => stats[file.name].size)
+                  logger.debug("update_non_recursive::not_initial_pass creating new space_usage with size: #{file.bytes} for uid: #{file.uid}")
+                  Earth::UsersSpaceUsage.create(:uid => stats[file.name].uid, :server_id => server_id, :space_usage => file.bytes)
                 else
-                  logger.debug("update_non_recursive::not_initial_pass updating new space_usage with size: #{stats[name].size} for uid: #{user_usage.uid}")
-                  Earth::UsersSpaceUsage.update(user_usage.id, {:space_usage => user_usage.space_usage + stats[file.name].size})
+                  logger.debug("update_non_recursive::not_initial_pass updating new space_usage with size: #{file.size} for uid: #{user_usage.uid}")
+                  Earth::UsersSpaceUsage.update(user_usage.id, {:space_usage => user_usage.space_usage + file.bytes})
                 end
                 # Ken: End creating/updating space usage
                 
