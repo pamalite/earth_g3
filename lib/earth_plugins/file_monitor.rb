@@ -337,7 +337,7 @@ private
           # Ken: Begin creating/updating usage space
           if user_usage == nil then
             logger.debug("update_non_recursive: creating new space_usage with size: #{stats[name].size} for uid: #{stats[name].uid}")
-            Earth::UsersSpaceUsage.create(:uid => stats[name].uid, :server_id => server.id, :space_usage => stats[name].size)
+            Earth::UsersSpaceUsage.create(:uid => stats[name].uid, :server_id => server_id, :space_usage => stats[name].size)
           else
             logger.debug("update_non_recursive: updating space_usage with size: #{stats[name].size} for uid: #{user_usage.uid}")
             Earth::UsersSpaceUsage.update(user_usage.id, {:space_usage => user_usage.space_usage + stats[name].size})
