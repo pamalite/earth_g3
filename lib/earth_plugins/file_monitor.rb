@@ -330,14 +330,23 @@ private
           user_usage = Earth::UsersSpaceUsage.find(:first, :conditions => [ " uid = ? AND server_id = ? ", stats[name].uid, server_id ])
           # Ken: End getting usage space
           
+          # Jon: Include 'job' and 'sequence' into the table 'files'
+          # the code belong use to be:
+          #        Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
+          #           directory.files.create(:name => name, :stat => stats[name])
+          #        end
+          pathArray = "#{directory.path}".split('/')
+          seq = pathArray.last
+          job = pathArray[pathArray.length-2]
           Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
-            directory.files.create(:name => name, :stat => stats[name])
+            directory.files.create(:name => name, :job => job, :sequence => seq,  :stat => stats[name])
           end
+          # Jon : End include 'job' and 'sequence' into the table 'files'
           
           # Ken: Begin creating/updating usage space
           if user_usage == nil then
             logger.debug("update_non_recursive: creating new space_usage with size: #{stats[name].size} for uid: #{stats[name].uid}")
-            Earth::UsersSpaceUsage.create(:uid => stats[name].uid, :server_id => server.id, :space_usage => stats[name].size)
+            Earth::UsersSpaceUsage.create(:uid => stats[name].uid, :server_id => server_id, :space_usage => stats[name].size)
           else
             logger.debug("update_non_recursive: updating space_usage with size: #{stats[name].size} for uid: #{user_usage.uid}")
             Earth::UsersSpaceUsage.update(user_usage.id, {:space_usage => user_usage.space_usage + stats[name].size})
