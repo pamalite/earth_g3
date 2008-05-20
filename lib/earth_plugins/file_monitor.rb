@@ -339,7 +339,7 @@ private
           seq = pathArray.last
           job = pathArray[pathArray.length-2]
           Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
-            directory.files.create(:name => name, :job => job, :sequence => seq,  :stat => stats[name])
+            directory.files.create(:name => name, :job => job, :sequence => seq, :shot => name, :stat => stats[name])
           end
           # Jon : End include 'job' and 'sequence' into the table 'files'
           

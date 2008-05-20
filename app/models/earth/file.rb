@@ -75,6 +75,21 @@ module Earth
     def self.build_filter_conditions(params)
       filter_filename = params[:filter_filename]
       filter_filename = "*" if filter_filename.blank?
+
+      # JON - support for job 
+      filter_job = params[:filter_job]
+      filter_job = "*" if filter_job.blank?
+      # JON - end 
+
+      # JON - support for sequence 
+      filter_sequence = params[:filter_sequence]
+      filter_sequence = "*" if filter_sequence.blank?
+      # JON - end 
+
+      # JON - support for shot 
+      filter_shot = params[:filter_shot]
+      filter_shot = "*" if filter_shot.blank?
+      # JON - end 
       
       filter_user = params[:filter_user]
       filter_uid  = filter_user.blank? ? nil : User.find_by_name(filter_user).uid
@@ -83,6 +98,29 @@ module Earth
         ["files.name LIKE ? AND files.uid = ?", filter_filename.tr('*', '%'), filter_uid]
       elsif filter_filename != '*'
         ["files.name LIKE ?", filter_filename.tr('*', '%')]
+      # JON - search files using tags
+      # search files through job , sequence and shot
+      elsif filter_job != '*' && filter_sequence != '*' && filter_shot != '*'
+        ["files.job LIKE ? AND files.sequence LIKE ? AND files.shot LIKE ?", filter_job.tr('*', '%'), filter_sequence.tr('*', '%'), filter_shot.tr('*', '%')]
+      # search files through job and sequence
+      elsif filter_job != '*' && filter_sequence != '*'
+        ["files.job LIKE ? AND files.sequence LIKE ?", filter_job.tr('*', '%'), filter_sequence.tr('*', '%')]
+      # search files through shot and sequence
+      elsif filter_shot != '*' && filter_sequence != '*'
+        ["files.shot LIKE ? AND files.sequence LIKE ?", filter_shot.tr('*', '%'), filter_sequence.tr('*', '%')]
+      # search files through job and shot
+      elsif filter_job != '*' && filter_shot != '*'
+        ["files.job LIKE ? AND files.shot LIKE ?", filter_job.tr('*', '%'), filter_shot.tr('*', '%')]
+      # search files through job
+      elsif filter_job != '*'
+        ["files.job LIKE ?", filter_job.tr('*', '%')]
+      # search files through sequence
+      elsif filter_sequence != '*'
+        ["files.sequence LIKE ?", filter_sequence.tr('*', '%')]
+      # search files through shot
+      elsif filter_shot != '*'
+        ["files.shot LIKE ?", filter_shot.tr('*', '%')]
+      # JON - end 
       end
     end
     
