@@ -33,6 +33,12 @@ class ServersController < ApplicationController
   def show
     Earth::File::with_filter do
       @server = Earth::Server.find_by_name(params[:server])
+      
+      @users_space_usages = Earth::File.find(:all,
+                                              :select => "sum(files.bytes) as space_usage, files.uid",
+                                              :joins => "join directories on files.directory_id = directories.id",
+                                              :group => "files.uid, directories.server_id",
+                                              :conditions => [ "server_id = ? ", @server.id ])
 
       respond_to do |format|
         format.html # show.rhtml

@@ -67,6 +67,20 @@
       %td.file-count= number_with_delimiter(root.size.count)
       %td.indexed= root.cache_complete? ? "Yes" : "Pending"
 
+%h2= "Users space usages on " + @server.name
+%table#server-space_usage
+  %thead
+    %tr
+      %th.uid UID
+      %th.user User Name
+      %th.size Space Usage
+  %tbody
+    - @users_space_usages.each do |user_usage|
+      %tr{:class => cycle('even', 'odd')}
+        %td.uid= user_usage.uid
+        %td.user= User.find(user_usage.uid).name
+        %td.size= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage.to_i), user_usage.space_usage.to_i) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage.to_i)
+      
 #links
   = link_to 'Edit', :action => :edit, :params => {:server => @server.name }
   |
