@@ -18,15 +18,15 @@
   %table.listing#browser
     %thead
       %tr
-        %th.server_name Server Name
-        %th.uid UID
-        %th.user_name User Name
-        %th.space_usage Space Usage
+        %th.name.Server Server Name
+        %th.user UID
+        %th.user User Name
+        %th.size Space Usage
         %th/
     %tbody
       - @users_space_usages.each do |user_usage|
         %tr{:class => cycle('even', 'odd')}
-          %td.server_name= Earth::Server.find_by_id(user_usage.server_id).name
-          %td.uid= user_usage.uid
-          %td.user_name= User.find(user_usage.uid).name
-          %td.space_usage= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage), user_usage.space_usage) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage)
+          %td.name.Server= Earth::Server.find_by_id(user_usage.server_id).name
+          %td.owner_user= user_usage.uid
+          %td.owner_user= User.find(user_usage.uid).name
+          %td.size= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage), user_usage.space_usage) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage)
