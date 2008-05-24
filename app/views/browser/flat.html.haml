@@ -48,6 +48,19 @@
           or page_number == @page_count |
             %td.page-link= link_to page_number, :overwrite_params => {:page => (page_number == 1 ? nil : page_number) }
 
+     
+      - @files ||= []
+      
+      - @files.sort!{|a,b| b.bytes <=> a.bytes}
+
+      - if @files.empty?
+        - max_size_files = 0
+      - else
+        - max_size_files = @files[0].bytes
+
+        - max_size = max_size_files
+      
+  
   %table.listing.flat#flat-browser
     %thead
       %tr
@@ -56,7 +69,7 @@
         %th.modified= sortable_table_header "Modified"
         %th.user User
         %th.size= sortable_table_header "Size"
-        %th/
+        %th.bar/
     %tbody
       - @files.each do |file|
         %tr{:class => cycle('even', 'odd')}
@@ -66,5 +79,6 @@
             %span{:title => file.modified}= distance_of_time_in_words_to_now(file.modified) + " ago"
           %td.owner_user
             %span= file.user.name
-          %td.size
+          %td.sizec
             %span= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(file.bytes), file.bytes) + " " + ApplicationHelper.human_units_of(file.bytes)
+          %td.bar= bar file.bytes, max_size, :class => "bar"

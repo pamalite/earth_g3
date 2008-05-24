@@ -14,14 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-class FixFilesPathIndex < ActiveRecord::Migration
-  def self.up
-    remove_index :files, :path
-    add_index :files, :path
-  end
-
-  def self.down
-    remove_index :files, :path
-    add_index :files, :path, :unique => true
+module Earth
+  class UsersSpaceUsage < ActiveRecord::Base
+    validates_numericality_of :uid, :greater_than => 0
+    validates_numericality_of :server_id, :grester_than => 0
   end
 end

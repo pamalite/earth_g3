@@ -14,12 +14,19 @@
 -# along with this program; if not, write to the Free Software
 -# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-- if not @browser_warning.nil?
-  .browser-warning= @browser_warning
-
-%center
-  %div{:style => "width: 600px; align: center;"}
-    %embed{:src => url_for(:controller => :graph, :action => :show, :params => @svg_params), :width => "600", :height => "600", :type => "image/svg+xml"}
-  
-  %script SVG_supporting_check()
-        
+%p
+  %table.listing#browser
+    %thead
+      %tr
+        %th.name.Server Server Name
+        %th.user UID
+        %th.user User Name
+        %th.size Space Usage
+        %th/
+    %tbody
+      - @users_space_usages.each do |user_usage|
+        %tr{:class => cycle('even', 'odd')}
+          %td.name.Server= Earth::Server.find_by_id(user_usage.server_id).name
+          %td.owner_user= user_usage.uid
+          %td.owner_user= User.find(user_usage.uid).name
+          %td.size= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage), user_usage.space_usage) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage)
