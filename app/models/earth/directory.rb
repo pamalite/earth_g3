@@ -52,6 +52,7 @@ module Earth
 
     @@save_observers = []
     @@cache_enabled = true
+   
     cattr_accessor :cache_enabled
     
     def self.filter_and_add_bytes(directories,options={})
@@ -104,6 +105,7 @@ module Earth
     # This only requires the id of the current directory and so it doesn't matter
     # if the lft and rgt values of the object in memory is out-of-date with the db state
     def size
+	
       result = Earth::File.find(:first, 
                                 :select => "SUM(files.bytes) AS sum_bytes, SUM(files.blocks) AS sum_blocks, COUNT(*) AS count",
                                 :joins => "JOIN directories ON files.directory_id = directories.id",
@@ -132,6 +134,8 @@ module Earth
     # Returns all files belonging to sub-directories of the current directory
     # down to the given level (including that level)
     def find_files_down_to_level(level)
+      #@start=Time.now
+       
       Earth::File.find(:all, :conditions => [ 
         "directory_id IN (SELECT id FROM directories " + \
                                  "WHERE level <= ? " + \
@@ -139,6 +143,10 @@ module Earth
                                  " AND lft >= ? " + \
                                  " AND rgt <= ?)",
                                  level, self.server_id, self.lft, self.rgt ])
+      
+	
+     #@run=Time.now-@start #3.86
+	    #debugger
     end
     
     # Walk the in-memory tree
@@ -290,8 +298,21 @@ module Earth
     # directories below this one, down to and including the given level
     # The clever bit is that we fetch all the files in one go (in a single SQL select)
     def cache_files_down_to_level(level)
-      files = find_files_down_to_level(level)
 
+       #@start=Time.now
+      files = Earth::File.find(:all,:conditions => [ 
+        "directory_id IN (SELECT id FROM directories " + \
+                                 "WHERE level <= ? " + \
+                                 " AND server_id = ? " + \
+                                 " AND lft >= ? " + \
+                                 " AND rgt <= ?)",
+                                 level, self.server_id, self.lft, self.rgt ])
+      
+	
+      #@run=Time.now-@start #4
+	     #debugger
+      #puts(self.rgt)
+	#@start=Time.now
       # Sort the files by directory
       directory_to_file_map = Hash.new
       files.each do |file|
@@ -301,9 +322,14 @@ module Earth
         directory_to_file_map[file.directory_id] << file
       end
 
+       #@run=Time.now-@start #0.36
+	     #debugger
       # Uses the @directory_to_file_map to set the "files"
       # collection for each directory node, recursively.
+      #@start=Time.now
       set_files_recursive(directory_to_file_map)
+       #@run=Time.now-@start #0.33
+	    # debugger
     end
     
     #
@@ -322,10 +348,16 @@ module Earth
     # directory node.
     #
     def cache_sizes_recursive(depth)
+	#@start=Time.now
+         #@run=Time.now-@start #5e-06
+	     #debugger
       leaf_level = self.level + depth
-
+      #debugger
       # We only need to cache the files to the level above the leaf level
       cache_files_down_to_level(leaf_level - 1)
+
+       #@run=Time.now-@start #4.83
+	     #debugger
 
       # Now determine cumulative size of each directory
       directory_size_map = Hash.new
@@ -339,6 +371,9 @@ module Earth
       # If there is cached information for the currently active
       # filter, grab size information from the cache.
       # Otherwise we need to calculate it from the files table.
+
+	#@run=Time.now-@start #4.5
+	     #debugger
       if Thread.current[:with_filtering].nil?
 
         cached_sizes = Earth::Directory.find(:all,
@@ -349,8 +384,9 @@ module Earth
         cached_sizes.each do |cached_size|
           directory_size_map[cached_size.id] = \
             Size.new(cached_size["bytes"], cached_size["blocks"], cached_size["count"])
+	    #puts(cached_size.id)
         end
-
+     
       else
         # No cached information for the active filter - we need to
         # recursively determine the size of each leaf-level
@@ -363,8 +399,8 @@ module Earth
         # Start by getting the ids and left-edge values for each
         # directory on the leaf level.
 
-        edges = find_subdirectories_at_level(leaf_level)
 
+        edges = find_subdirectories_at_level(leaf_level)
         # If the query didn't return any information, there are no
         # directories on the leaf level and we don't need to bother.
         if not edges.empty?
@@ -383,7 +419,9 @@ module Earth
           edge_case = "CASE ";
           edges.sort_by{|e| e.lft}.reverse.each do |edge_info|
             id = edge_info['id'].to_i
+	    #puts(self.lft)
             edge_case += "WHEN lft >= #{edge_info['lft'].to_i} THEN #{id} "
+            #puts(edge_case)
             directory_id_set << id # Remember leaf level directory
           end
           edge_case += "END"
@@ -403,8 +441,11 @@ module Earth
           
           # Grab cumulative size per leaf-level directory from the
           # database in one go.
+	  #@run=Time.now-@start #4.68
+	     #debugger
+           #@start=Time.now
           size_infos = Earth::File.find(:all, 
-                                        :select => ("SUM(bytes) AS sum_bytes, SUM(blocks) AS sum_blocks, COUNT(*) AS count, #{edge_case} AS dir_id"),
+                                        :select => ("SUM(files.bytes) AS sum_bytes, SUM(files.blocks) AS sum_blocks, COUNT(*) AS count, #{edge_case} AS dir_id"),
                                         :joins => "JOIN directories ON files.directory_id = directories.id",
                                         :conditions => [ 
                                           "directories.level >= ? " + \
@@ -424,33 +465,42 @@ module Earth
             blocks = size_info["sum_blocks"].to_i
             count = size_info["sum_count"].to_i
             directory_id = size_info["dir_id"].to_i
+            #puts(directory_id)
             directory_size_map[directory_id] = Size.new(bytes, blocks, count)
-
+	     
             # Remove leaf level directory for which we got size
             # information, leaving only empty directories in the set
             directory_id_set.delete(directory_id) 
+	    
           end
-
+	  #@run=Time.now-@start #5.07 2.2
+	     #debugger
+	  
           # Put empty directories into the map
           directory_id_set.each do |empty_directory_id|
             directory_size_map[empty_directory_id] = Size.new(0, 0, 0)
+	 
           end
+	#@run=Time.now-@start #4.98 total 6.3
+	     #debugger
         end
       end
-
+	
       # The following calculates the size of all remaining (inner)
       # directories recursively by using the sizes of files and
       # leaf-level directories, and caches the size information
       # in each directory.
-      
-      compute_cached_size_recursive(self.level + depth, directory_size_map)
-      set_cached_size_recursive(self.level + depth, directory_size_map)
+      #@run=Time.now-@start #4.8
+	     #debugger
+      compute_cached_size_recursive(self.level + depth, directory_size_map) #every directory size under the level
+      set_cached_size_recursive(self.level + depth, directory_size_map) #directory and it subdirs size under the level
 
       # Done: For each directory up to @level_count levels under the
       # current directory, the files and size getters can now be
       # used without triggering a database query.
+	
     end
-
+  
   private
     def increase_cached_sizes_of_self_and_ancestors(size_increase)
       if size_increase != Size.new(0, 0, 0)
