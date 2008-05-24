@@ -1,3 +1,10 @@
+<<<<<<< HEAD:.gitignore
 log/*.log
 public/stylesheets/*.css
 db/*.rb
+=======
+.DS_Store
+.svn
+log
+tmp
+>>>>>>> 069abae374f812d56c60e069652032884ace9b7a:.gitignore

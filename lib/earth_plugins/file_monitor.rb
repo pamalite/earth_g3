@@ -284,7 +284,6 @@ private
       return 1
     end
 
-
     Earth::Directory::transaction do
 
       file_names, subdirectory_names, stats = [], [], Hash.new
@@ -313,7 +312,7 @@ private
           end
         end
       end
-
+      
       if not options[:only_build_directories] then
         # By adding and removing files on the association, the cache of the association will be kept up to date
         if not options[:initial_pass]
@@ -322,15 +321,27 @@ private
           added_file_names = file_names
         end
         added_file_names.each do |name|
+          
+          # Jon: Include 'job' and 'sequence' into the table 'files'
+          # the code belong use to be:
+          #        Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
+          #           directory.files.create(:name => name, :stat => stats[name])
+          #        end
+          pathArray = "#{directory.path}".split('/')
+          seq = pathArray.last
+          job = pathArray[pathArray.length-2]
           Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
-            directory.files.create(:name => name, :stat => stats[name])
+            directory.files.create(:name => name, :job => job, :sequence => seq, :shot => name, :stat => stats[name])
           end
+          # Jon : End include 'job' and 'sequence' into the table 'files'
+          
         end
 
         if not options[:initial_pass]
           directory_files = directory.files.to_ary.clone
           
           directory_files.each do |file|
+            
             # If the file still exists
             if file_names.include?(file.name)
               logger.debug("checking for update on file #{file.name}")
@@ -340,12 +351,14 @@ private
                 Earth::File.benchmark("Updating file with name #{file.name}", Logger::DEBUG, !log_all_sql) do
                   file.save
                 end
+                
               end
               # If the file has been deleted
             else
               Earth::Directory.benchmark("Removing file with name #{file.name}", Logger::DEBUG, !log_all_sql) do
                 directory.files.delete(file)
               end
+              
             end
           end
         end
