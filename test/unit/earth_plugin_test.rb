@@ -14,6 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# FL - fixes test unit runs [2008-05-24 Sat 0650hr]
+require File.dirname(__FILE__) + '/../test_helper'
+
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'earth_plugin_interface', 'earth_plugin.rb')
 
 class PluginThatValidates < EarthPlugin
