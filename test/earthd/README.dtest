@@ -1,0 +1,62 @@
+========= IMPORTANT NOTICE - READ THIS BEFORE RUNNING THE TEST ===========
+
+This document briefly descibes the modifications and current status of the
+dtest.rbscript which is a lean and less comprehensive version of the
+original daemon_test.rb script.
+
+
+TESTING NOTES (REQUIREMENTS)
+
+1. Ensure that the test data inserted into the database during the execution
+   of the unit tests are removed. The earth_test database should just be an 
+   empty data container but with all the relevant tables and relationship 
+   intact.
+
+2. Create a test directory over which the testing script will be working on.
+   Please ensure that you have write access to this directory and that it
+   contains your data. The test script will DESTROY this directory when it
+   is executed.
+
+3. Testing of the caching feature in the daemon is monitored but not acted
+   upon. Further investigation of the caching feature is required before
+   this aspect of the test can be implemented.
+
+4. This minimal version of the daemon_test.rb script was successfully tested
+   on Revision 1180 of the Earth daemon (earthd). It will require some 
+   modifications to run on future versions if the tested features have been
+   modified in future version of the Earth daemon.
+
+
+COMMANDS
+
+1. Testing Over A Specified Number of Iterations
+
+    ./dtest.rb -i nn /path_to_your_test_directory
+
+    where nn = number of iterations
+
+
+2. Testing Over A Long Period of Time (Real World Application)
+
+    ./dtest.rb /path_to_your_test_directory
+
+
+3. To Run Testing in Debug Mode
+
+    Simply set the flag $debug_mode to true and re-execute the test script.
+
+
+Note: The above commands are a subset of the acutal commands and testing 
+      options that are available on the original test_daemon.rb test script.
+
+
+SUCCESS CRITERIA
+
+1. The following message should appear on the terminal to indicate succesful
+   testing:
+
+   ============= DAEMON TEST PASSED (No Assertion raised) =================
+
+    Caching stats: 38/250    [15.2 % ]
+
+   ========================================================================
