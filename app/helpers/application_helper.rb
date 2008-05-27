@@ -40,7 +40,7 @@ module ApplicationHelper
 
   def ApplicationHelper::human_units_of(size)
     case 
-      when size < 1.kilobyte: 'Bytes'
+      when size < 1.kilobyte.byte: 'Bytes'
       when size < 1.megabyte: 'KB'
       when size < 1.gigabyte: 'MB'
       when size < 1.terabyte: 'GB'

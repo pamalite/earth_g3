@@ -301,12 +301,14 @@ class DaemonTest
     # Wait for daemon to index the initial directory structure
     puts "Waiting for daemon to index initial empty directory structure"
     if Earth::Server.this_server.last_update_finish_time.nil? then
-      puts "Sleeping for 5s"
-      sleep 5
-      puts "5s sleep over"
+      puts "Sleeping for 10s"
+      sleep 10
+      puts "10s sleep over"
     end
 
-    sleep 5
+		puts "Sleeping for 10s"
+		sleep 10
+		puts "10s sleep over"
 
     puts "Daemon indexed initial empty directory structure"
     
@@ -366,11 +368,11 @@ class DaemonTest
     1.upto(mutation_count) { mutate_tree(use_options) }
 
     if not use_options[:replay]
-      puts "Waiting for daemon to update directory [5s]"
+      puts "Waiting for daemon to update directory [8s]"
       
       # Wait five seconds so that the changes to the file system become
       # "old enouh" to get picked up by the file monitor.
-      sleep 5
+      sleep 8
 
       puts "Verifying data integrity"
       verify_data
@@ -457,7 +459,7 @@ class DaemonTest
     db_directory_names.sort!
     db_file_names.sort!
 
-    if $debug_mode then
+    if not $debug_mode then
       puts "directories from database:"
       pp(db_directory_names)
       puts "directories from file system:"
