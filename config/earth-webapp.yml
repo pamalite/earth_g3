@@ -77,7 +77,7 @@ graph_remainder_mode: drop
 # :by-type - each segment color will use a hue corresponding to the type of the segment, configured 
 # below.
 #
-graph_coloring_mode: rainbow
+graph_coloring_mode: filetype
 
 #
 # Segment type hues and saturations, used only in graph_coloring_mode: by-type

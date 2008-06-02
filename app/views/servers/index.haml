@@ -23,7 +23,7 @@
     %th.version Daemon Version
     %th.interval Update Interval
     %th.last-hearbeat Last Heartbeat
-    %th.action{:colspan => "2"} Actions
+    %th.action{:colspan => "3"} Actions
     - for server in @servers
       %tr{:class => daemon_status(server)}
         %td.name= server.name
@@ -34,3 +34,4 @@
         %td.last-heartbeat= server.heartbeat_time ? time_ago_in_words(server.heartbeat_time, true) + " ago" : "N/A"
         %td.action= link_to 'Show', :action => :show, :params => {:server => server.name }
         %td.action= link_to 'Edit', :action => :edit, :params => {:server => server.name }
+        %td.action= link_to 'Configure', :action => :configure, :params => {:server => server.name }

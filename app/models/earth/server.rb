@@ -9,7 +9,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+# hear
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -82,6 +82,34 @@ module Earth
     def cache_complete?
       roots = Earth::Directory.roots_for_server(self) 
       (not roots.empty?) and roots.all? { |d| d.cache_complete? and not d.children.empty? }
+    end
+
+    def fork_daemon
+      initialize_daemon
+      fork do
+        puts "Launching daemon in background"
+        exec("#{@daemon} start")
+      end
+    end
+   
+    def get_daemon_pid
+      if @daemon_pid.nil?
+        @daemon_pid = fork_daemon
+      else
+        "[server.rb] Already up with pid #{@daemon_pid}"
+      end
+    end 
+
+    def unfork_daemon
+      initialize_daemon
+      fork do
+        puts "Killing daemon"
+        exec("#{@daemon} stop")
+      end
+    end
+    
+    def initialize_daemon
+      @daemon = "/home/ssurfer/myssgit/earth/script/earthd"
     end
   end
 end

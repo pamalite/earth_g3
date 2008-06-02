@@ -70,4 +70,47 @@ class ServersController < ApplicationController
       end
     end
   end
+
+
+  # GET /servers/1;configure
+  def configure
+    Earth::File::with_filter do
+      @server = Earth::Server.find_by_name(params[:server])
+    end
+  end
+
+  # PUT /servers/1
+  # PUT /servers/1.xml
+  def stopd
+    @server = Earth::Server.find(params[:id])
+    @server.unfork_daemon
+    respond_to do |format|
+      if @server.update_attributes(params[:server])
+        flash[:notice] = 'Server was successfully configured.'
+        format.html { redirect_to :action => "show", :params => { :server => @server.name } }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "configure" }
+        format.xml  { render :xml => @server.errors.to_xml }
+      end
+    end
+  end
+
+  # PUT /servers/1
+  # PUT /servers/1.xml
+  def startd
+    @server = Earth::Server.find(params[:id])
+    @server.get_daemon_pid
+    respond_to do |format|
+      if @server.update_attributes(params[:server])
+        flash[:notice] = 'Server was successfully configured.'
+        format.html { redirect_to :action => "show", :params => { :server => @server.name } }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "configure" }
+        format.xml  { render :xml => @server.errors.to_xml }
+      end
+    end
+  end
+
 end

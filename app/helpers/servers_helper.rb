@@ -24,4 +24,21 @@ module ServersHelper
       "unknown"
     end
   end
+
+  def stop_daemon(server)
+    if server.daemon_alive?
+      server.unfork_daemon
+    else
+      "[servers_helper.rb] Already down"
+    end
+  end
+
+  def start_daemon(server)
+    if not server.daemon_alive?
+      @daemon_pid = server.get_daemon_pid
+    else
+      "[servers_helper.rb] Already up"
+    end
+  end
+
 end
