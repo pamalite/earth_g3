@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   @@webapp_config = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), "../../config/earth-webapp.yml"))).result)
 
   def self.webapp_config
+    # Possible to add view plugin hook here?
     @@webapp_config
   end
 
