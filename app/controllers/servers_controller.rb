@@ -15,6 +15,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class ServersController < ApplicationController
+
+  @timer_idle = true
+
   # GET /servers
   # GET /servers.xml
   def index
@@ -81,12 +84,12 @@ class ServersController < ApplicationController
 
   # PUT /servers/1
   # PUT /servers/1.xml
-  def stopd
+  def stopd_orig
     @server = Earth::Server.find(params[:id])
     @server.unfork_daemon
     respond_to do |format|
       if @server.update_attributes(params[:server])
-        flash[:notice] = 'Server was successfully configured.'
+        flash[:notice] = 'Server was successfully stopped.'
         format.html { redirect_to :action => "show", :params => { :server => @server.name } }
         format.xml  { head :ok }
       else
@@ -98,17 +101,73 @@ class ServersController < ApplicationController
 
   # PUT /servers/1
   # PUT /servers/1.xml
-  def startd
+  def startd_orig
     @server = Earth::Server.find(params[:id])
     @server.get_daemon_pid
     respond_to do |format|
       if @server.update_attributes(params[:server])
-        flash[:notice] = 'Server was successfully configured.'
+        flash[:notice] = 'Server was successfully started.'
         format.html { redirect_to :action => "show", :params => { :server => @server.name } }
         format.xml  { head :ok }
       else
         format.html { render :action => "configure" }
         format.xml  { render :xml => @server.errors.to_xml }
+      end
+    end
+  end
+
+  def startdaemon
+    @server = Earth::Server.find(params[:id])
+    @server.get_daemon_pid
+    # initialize counter
+    session[:counter] = 0
+    # initialize stop loop variable
+    @timer_idle = false
+    session[:stop_timer] = false
+    render :update do |page|
+      # update the status
+      page.replace_html 'daemon_status_message', 'Starting....'
+      # start timer
+      # page << "initialize_polling(1000);"
+      # disable the start button
+      page << "document.getElementById('start_daemon_button').disabled = true;"
+      # highlight the updated div - so client notices
+      page.visual_effect :highlight, 'daemon_status_message'
+    end
+  end
+
+  # PUT /servers/1
+  # PUT /servers/1.xml
+  def stopdaemon
+    @server = Earth::Server.find(params[:id])
+    @server.unfork_daemon
+    # change our conditional stop loop variable
+    @timer_idle = true
+    session[:stop_timer] = true
+    render :update do |page|
+      # update the status
+      page.replace_html 'daemon_status_message', 'Stopping....'
+      # disable the stop button
+      page << "document.getElementById('stop_daemon_button').disabled = true;"
+      # highlight the updated div - so client notices
+      page.visual_effect :highlight, 'daemon_status_message'
+    end
+  end
+
+  def update_daemon_status
+    # count
+    session[:counter] += 1
+    render :update do |page|
+      if session[:stop_timer] == false
+      # if @timer_idle == false
+        # update the status
+        page.replace_html 'daemon_status_message', "Daemon up for: #{session[:counter]} seconds"
+        # restart the timer
+        page << "initialize_polling(1000);"
+      else
+        page.replace_html 'daemon_status_message', "Stopping.... reached: #{session[:counter]} seconds"
+        # highlight the updated div - so client notices
+        page.visual_effect :highlight, 'daemon_status_message'
       end
     end
   end

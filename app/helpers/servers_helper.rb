@@ -25,20 +25,18 @@ module ServersHelper
     end
   end
 
-  def stop_daemon(server)
+  def daemon_alive(server)
     if server.daemon_alive?
-      server.unfork_daemon
+      true
+    elsif server.daemon_version.nil?
+      false
     else
-      "[servers_helper.rb] Already down"
+      false
     end
   end
 
-  def start_daemon(server)
-    if not server.daemon_alive?
-      @daemon_pid = server.get_daemon_pid
-    else
-      "[servers_helper.rb] Already up"
-    end
+  def current_time(server)
+    "The current time is #{Time.now.to_s}"
   end
 
 end

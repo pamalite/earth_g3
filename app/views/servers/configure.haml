@@ -14,27 +14,26 @@
 -# along with this program; if not, write to the Free Software
 -# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 %h1 Configuring Daemon
 = error_messages_for :server
-- if (daemon_status(@server) == "down") || (daemon_status(@server) == "unknown")
-  - form_for(:server, :url => url_for(:action => :startd, :params => {:id => @server.id }), :html => { :method => :put }) do |f|
-    %p
-      %b Name
-      = @server.name
-    %p
-      %b Status
-      = daemon_status(@server)
-    %p= submit_tag "Start"
-- else
-  - form_for(:server, :url => url_for(:action => :stopd, :params => {:id => @server.id }), :html => { :method => :put }) do |f|
-    %p
-      %b Name
-      = @server.name
-    %p
-      %b Status
-      = daemon_status(@server)
-    %p= submit_tag "Stop"
+%p
+  %b Server
+  = @server.name
+%p
+  %b Status
+  = daemon_status(@server)
 
+- if daemon_alive(@server)
+  - remote_form_for(:server, :url => url_for(:action => :stopdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+    %p= submit_tag "Stop daemon", :id => "stop_daemon_button"
+- else
+  - remote_form_for(:server, :url => url_for(:action => :startdaemon, :params => {:id => @server.id }), :html => { :multipart => true }) do |f|
+    %p= submit_tag "Start daemon", :id => "start_daemon_button"
+
+%p{:id => 'daemon_status_message'}
+
+      
 = link_to 'Show', :action => :show, :params => {:server => @server.name}
 |
 = link_to 'Back', servers_path
