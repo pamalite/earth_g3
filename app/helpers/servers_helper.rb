@@ -39,4 +39,8 @@ module ServersHelper
     "The current time is #{Time.now.to_s}"
   end
 
+  def daemon_info(server)
+    server.get_daemon_status
+  end
+
 end

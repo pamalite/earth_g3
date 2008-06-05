@@ -92,11 +92,20 @@ module Earth
       end
     end
    
+    def refork_daemon
+      initialize_daemon
+      fork do
+        puts "Restartin daemon in background"
+        exec("#{@daemon} restart")
+      end
+    end   
+    
     def get_daemon_pid
       if @daemon_pid.nil?
         @daemon_pid = fork_daemon
+        "[server.rb] Daemon not running - Starting daemon instead"
       else
-        "[server.rb] Already up with pid #{@daemon_pid}"
+        @daemon_pid = refork_daemon
       end
     end 
 
@@ -108,8 +117,27 @@ module Earth
       end
     end
     
+    def clear_daemon
+      initialize_daemon
+      fork do
+        puts "Clearing daemon"
+        exec("#{@daemon} clear")
+      end
+    end
+    
     def initialize_daemon
       @daemon = "/home/ssurfer/myssgit/earth/script/earthd"
     end
+
+    def get_daemon_status
+      initialize_daemon
+      fork do
+        puts "Getting daemon status"
+        exec("#{@daemon} status")
+      end  
+      @info
+    end
+
+
   end
 end

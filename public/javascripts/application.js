@@ -7,34 +7,32 @@ var e_delay = 3000
 
 function initialize_polling(e_seconds)
 {
-    // Set the length of the timer, in seconds
-    e_secs = e_seconds
-    example_StopTheClock()
-    example_StartTheTimer()
+  // Set the length of the timer, in seconds
+  e_secs = e_seconds
+  stopTheClock()
+  startTheTimer()
 }
 
-function example_StopTheClock()
+function stopTheClock()
 {
-    e_secs = 0
-    if(e_timerRunning)
-        clearTimeout(e_timerID)
-    e_timerRunning = false
+  e_secs = 0
+  if(e_timerRunning)
+    clearTimeout(e_timerID)
+  e_timerRunning = false
 }
 
-function example_StartTheTimer()
+function startTheTimer()
 {
-    if (e_secs==0)
-    {
-        example_StopTheClock()
-        new Ajax.Request('/servers/update_daemon_status', {
-          method:     'post'
-        });
-    }
-    else
-    {
-        e_secs = e_secs - 1
-        e_timerRunning = true
-        e_timerID = self.setTimeout("StartTheTimer()", e_delay)
-    }
+  if (e_secs==0)
+  {
+    stopTheClock()
+    new Ajax.Request('/servers/statusdaemon', {method: 'post'});
+  }
+  else
+  {
+    e_secs = e_secs - 1
+    e_timerRunning = true
+    e_timerID = self.setTimeout("startTheTimer()", e_delay)
+  }
 }
 

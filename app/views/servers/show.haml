@@ -67,6 +67,18 @@
       %td.file-count= number_with_delimiter(root.size.count)
       %td.indexed= root.cache_complete? ? "Yes" : "Pending"
 
+- remote_form_for(:server, :url => url_for(:action => :adddir, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  %p= submit_tag "Add directory          ", :id => "add_dir_button"
+
+- remote_form_for(:server, :url => url_for(:action => :removedir, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  %input{:name => "dirname", :type => "file"}
+  %p= submit_tag "Remove directory    ", :id => "remove_dir_button"
+
+-# <form name="formName" method="POST" action="yourcgi.(exe/php/asp/pl)">
+-# <input type="file" name="fileName">
+-# </form>
+
+
 %h2= "Users space usages on " + @server.name
 %table#server-space_usage
   %thead
