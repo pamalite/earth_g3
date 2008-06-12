@@ -165,7 +165,7 @@ class ServersController < ApplicationController
       if @added      
         page.replace_html 'adding_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~1s) ]</font>"
       else
-        page.replace_html 'adding_directory_message', "<font color=blue>[ Cannot add empty directory. ]</font>"
+        page.replace_html 'adding_directory_message', "<font color=blue>[ Please specify directory name. ]</font>"
       end
       # highlight the updated div - so client notices
       page.visual_effect :highlight, 'adding_directory_message'
