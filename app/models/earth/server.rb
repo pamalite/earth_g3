@@ -9,7 +9,6 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# hear
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -95,7 +94,7 @@ module Earth
     def refork_daemon
       initialize_daemon
       fork do
-        puts "Restartin daemon in background"
+        puts "Restarting daemon in background"
         exec("#{@daemon} restart")
       end
     end   
@@ -126,7 +125,7 @@ module Earth
     end
     
     def initialize_daemon
-      @daemon = "/home/ssurfer/myssgit/earth/script/earthd"
+      @daemon = "script/earthd"
     end
 
     def get_daemon_status
@@ -138,6 +137,13 @@ module Earth
       @info
     end
 
+   def add_directory(directory_name)
+     initialize_daemon
+     fork do
+       puts "Adding dir to monitor"
+       exec("#{@daemon} add #{directory_name}")
+     end
+   end
 
   end
 end

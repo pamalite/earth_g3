@@ -21,37 +21,42 @@
   %b Server
   = @server.name
 
-- if daemon_alive(@server)
-  - remote_form_for(:server, :url => url_for(:action => :stopdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
-    %p= submit_tag "Stop daemon          ", :id => "stop_daemon_button"
-- else
-  - remote_form_for(:server, :url => url_for(:action => :startdaemon, :params => {:id => @server.id }), :html => { :multipart => true }) do |f|
-    %p= submit_tag "Start daemon         ", :id => "start_daemon_button"
-
-
-
-- if daemon_alive(@server)
-  - remote_form_for(:server, :url => url_for(:action => :restartdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
-    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button"
-- else
-  - remote_form_for(:server, :url => url_for(:action => :restartdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
-    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button", :disabled => "true"
-
-- if daemon_alive(@server)
-  - remote_form_for(:server, :url => url_for(:action => :cleardaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
-    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button", :disabled => "true"
-- else
-  - remote_form_for(:server, :url => url_for(:action => :cleardaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
-    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button"
-
-      
 %p
   %b Status
   = daemon_status(@server)
   = daemon_info(@server)
 
 
+- remote_form_for(:server, :url => url_for(:action => :startdaemon, :params => {:id => @server.id }), :html => { :multipart => false}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Start daemon          ", :id => "start_daemon_button",   :disabled => "true"
+  - else
+    %p= submit_tag "Start daemon          ", :id => "start_daemon_button",   :onclick => "refreshDelay()"
+
+
+- remote_form_for(:server, :url => url_for(:action => :stopdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Stop daemon          ", :id => "stop_daemon_button",    :onclick => "refreshNow()"
+  - else
+    %p= submit_tag "Stop daemon          ", :id => "stop_daemon_button",    :disabled => "true"
+
+
+- remote_form_for(:server, :url => url_for(:action => :restartdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button", :onclick => "refreshDelay()"
+  - else
+    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button", :disabled => "true"
+
+
+- remote_form_for(:server, :url => url_for(:action => :cleardaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button",   :disabled => "true"
+  - else
+    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button",   :onclick => "refreshDelay()"
+
+
 %p{:id => 'daemon_status_message'}
+
 
 
 = link_to 'Show', :action => :show, :params => {:server => @server.name}

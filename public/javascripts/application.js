@@ -1,38 +1,22 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
-var e_timerRunning = false
-var e_timerID = null
-var e_delay = 3000
-
-function initialize_polling(e_seconds)
+// Purpose - Required for updating UI daemon configuration page.
+// Version - unexported version
+// Date    - 12 Jun 2008
+function refreshNow()
 {
-  // Set the length of the timer, in seconds
-  e_secs = e_seconds
-  stopTheClock()
-  startTheTimer()
+  // Delay before refreshing to ensure
+  // the shutdown sequence done.
+	setTimeout( "refresh()", 1000 );
 }
-
-function stopTheClock()
+function refreshDelay()
 {
-  e_secs = 0
-  if(e_timerRunning)
-    clearTimeout(e_timerID)
-  e_timerRunning = false
+  // Delay a little longer before refreshing
+  // to ensure bootup sequence is done.
+  setTimeout( "refresh()", 4000 )
 }
-
-function startTheTimer()
+function refresh()
 {
-  if (e_secs==0)
-  {
-    stopTheClock()
-    new Ajax.Request('/servers/statusdaemon', {method: 'post'});
-  }
-  else
-  {
-    e_secs = e_secs - 1
-    e_timerRunning = true
-    e_timerID = self.setTimeout("startTheTimer()", e_delay)
-  }
+	window.location.reload( true );
 }
-

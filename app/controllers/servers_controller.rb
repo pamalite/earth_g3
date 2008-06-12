@@ -84,17 +84,10 @@ class ServersController < ApplicationController
   # PUT /servers/2.xml
   def startdaemon
     @server = Earth::Server.find(params[:id])
-    @server.get_daemon_pid
-    # initialize counter
-    session[:counter] = 0
-    # initialize stop loop variable
-    # status = Earthd.daemon_status();
-    session[:stop_timer] = false
+    @server.fork_daemon
     render :update do |page|
       # update the status
-      page.replace_html 'daemon_status_message', "Status: Starting..."
-      # start timer
-      page << "initialize_polling(300);"
+      page.replace_html 'daemon_status_message', "<font color=green>[ Starting daemon . . . (~4s) ]</font>"
       # disable the start button
       page << "document.getElementById('start_daemon_button').disabled = true;"
       # highlight the updated div - so client notices
@@ -107,17 +100,10 @@ class ServersController < ApplicationController
   # PUT /servers/2.xml
   def restartdaemon
     @server = Earth::Server.find(params[:id])
-    @server.get_daemon_pid
-    # initialize counter
-    session[:counter] = 0
-    # initialize stop loop variable
-    # status = Earthd.daemon_status();
-    session[:stop_timer] = false
+    @server.refork_daemon
     render :update do |page|
       # update the status
-      page.replace_html 'daemon_status_message', "Status: Restarting..."
-      # start timer
-      # page << "initialize_polling(300);"
+      page.replace_html 'daemon_status_message', "<font color=green>[ Restarting daemon . . . (~4s) ]</font>"
       # disable the start button
       page << "document.getElementById('restart_daemon_button').disabled = true;"
       # highlight the updated div - so client notices
@@ -129,19 +115,12 @@ class ServersController < ApplicationController
   # PUT /servers/2.xml
   def cleardaemon
     @server = Earth::Server.find(params[:id])
-    @server.unfork_daemon
+    # @server.unfork_daemon
     @server.clear_daemon
-    # initialize counter
-    session[:counter] = 0
-    # initialize stop loop variable
-    # status = Earthd.daemon_status();
-    session[:stop_timer] = false
     render :update do |page|
       # update the status
-      page.replace_html 'daemon_status_message', "Status: Clearing ..."
-      # start timer
-      # page << "initialize_polling(300);"
-      # disable the start button
+      page.replace_html 'daemon_status_message', "<font color=blue>[ Clearing data on localhost . . . (~4s) ]</font>"
+      # disable the clear daemon button
       page << "document.getElementById('clear_daemon_button').disabled = true;"
       # highlight the updated div - so client notices
       page.visual_effect :highlight, 'daemon_status_message'
@@ -150,38 +129,46 @@ class ServersController < ApplicationController
 
   # POST /servers/1;running_status
   def statusdaemon    
-    @msg = " running "
-    # count
-    session[:counter] += 1
     render :update do |page|
-      if session[:stop_timer] == false
-        # update the status
-        page.replace_html 'daemon_status_message', "Status: #{session[:counter]} s   [#{@msg}]"
-        # restart the timer
-        page << "initialize_polling(300);"
-      else
-        page.replace_html 'daemon_status_message', "Stopping.... reached: #{session[:counter]} seconds"
-        # highlight the updated div - so client notices
-        page.visual_effect :highlight, 'daemon_status_message'
-      end
+      # update the status
+      page.replace_html 'daemon_status_message', "<font color=green>[ Running . . . ]</font>"
     end
   end
-
 
   # PUT /servers/2
   # PUT /servers/2.xml
   def stopdaemon
     @server = Earth::Server.find(params[:id])
     @server.unfork_daemon
-    # change our conditional stop loop variable
-    session[:stop_timer] = true
     render :update do |page|
       # update the status
-      page.replace_html 'daemon_status_message', 'Stopping....'
+      page.replace_html 'daemon_status_message', "<font color=red>[ Stopping daemon . . . (~1s) ]</font>"
       # disable the stop button
       page << "document.getElementById('stop_daemon_button').disabled = true;"
       # highlight the updated div - so client notices
       page.visual_effect :highlight, 'daemon_status_message'
+    end
+  end
+
+  # PUT /servers/1
+  # PUT /servers/1.xml
+  def adddir
+    @server = Earth::Server.find(params[:id]) 
+    @added = false
+    @val = params[:directory_name]
+    if @val != ''
+      @server.add_directory(@val)
+      @added = true
+    end
+    render :update do |page|
+      # update the status
+      if @added      
+        page.replace_html 'adding_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~1s) ]</font>"
+      else
+        page.replace_html 'adding_directory_message', "<font color=blue>[ Cannot add empty directory. ]</font>"
+      end
+      # highlight the updated div - so client notices
+      page.visual_effect :highlight, 'adding_directory_message'
     end
   end
 
