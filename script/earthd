@@ -217,7 +217,9 @@ class Earthd
       response = talk_to_server("add #{ARGV[1]}")
       puts response unless response == "OK"
     when "remove"
-      $stderr.puts "Remove action is currently not implemented."
+      # $stderr.puts "Remove action is currently not implemented."
+      response = talk_to_server("remove #{ARGV[1]}")
+      puts response unless response == "OK"
     when "clear"
       if not daemon_running?
         init_rails
@@ -353,6 +355,21 @@ class Earthd
     end
   end
   
+  def daemon_remove_directory(path)
+    logger.debug("received request to remove directory '#{path}'")
+    if not @booted
+    	"Refusing to remove directory '#{path}': daemon hasn't booted up yet"
+    else
+    	if Earth::Server::this_server.directories.exists?(:path => path)
+    		dir_id = Earth::Server::this_server.directories.find(:first, :conditions => [ "path = ?", path]).id
+    		Earth::Server::this_server.directories.destroy(dir_id)
+    		return "OK"
+    	else
+    		return "Cannot remove directory '#{path}': path not found."
+    	end
+    end
+  end
+  
   def handle_client_connection(socket)
     begin
       message = socket.recv(1024)
@@ -361,6 +378,8 @@ class Earthd
         response = daemon_status()
       elsif /add\s.*/ =~ message
         response = daemon_add_directory(File.expand_path(message[3..-1].strip))
+      elsif /remove\s.*/ =~ message
+        response = daemon_remove_directory(File.expand_path(message[6..-1].strip))
       else
         response = "Cannot parse message #{message}"
       end

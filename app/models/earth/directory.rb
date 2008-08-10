@@ -136,8 +136,8 @@ module Earth
     def find_files_down_to_level(level)
        
       Earth::File.find(:all, 
-	:joins => "JOIN directories ON files.directory_id = directories.id",
-	:conditions => [ 
+	                     :joins => "JOIN directories ON files.directory_id = directories.id",
+	                     :conditions => [ 
                                  "directories.level <= ? " + \
                                  " AND directories.server_id = ? " + \
                                  " AND directories.lft >= ? " + \
