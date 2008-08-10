@@ -144,6 +144,13 @@ module Earth
        exec("#{@daemon} add #{directory_name}")
      end
    end
-
-  end
+   
+   def remove_directory(directory_path)
+   	initialize_daemon
+   	fork do
+   		puts "Removing monitored directory"
+   		exec("#{@daemon} remove #{directory_path}")
+   	end
+ 	 end
+ end
 end

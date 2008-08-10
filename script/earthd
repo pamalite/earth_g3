@@ -359,14 +359,20 @@ class Earthd
     logger.debug("received request to remove directory '#{path}'")
     if not @booted
     	"Refusing to remove directory '#{path}': daemon hasn't booted up yet"
+    elsif not File.exists? path
+      "Refusing to remove directory '#{path}': does not exist"
+    elsif not File.directory? path
+      "Refusing to remove directory '#{path}': not a directory"
+    elsif not File.readable? path
+      "Refusing to remove directory '#{path}': not readable"
     else
     	if Earth::Server::this_server.directories.exists?(:path => path)
     		dir_id = Earth::Server::this_server.directories.find(:first, :conditions => [ "path = ?", path]).id
     		Earth::Server::this_server.directories.destroy(dir_id)
-    		return "OK"
     	else
     		return "Cannot remove directory '#{path}': path not found."
     	end
+    	"OK"	
     end
   end
   

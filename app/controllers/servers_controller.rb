@@ -163,13 +163,35 @@ class ServersController < ApplicationController
     render :update do |page|
       # update the status
       if @added      
-        page.replace_html 'adding_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~1s) ]</font>"
+        page.replace_html 'updated_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~1s) ]</font>"
       else
-        page.replace_html 'adding_directory_message', "<font color=blue>[ Please specify directory name. ]</font>"
+        page.replace_html 'updated_directory_message', "<font color=blue>[ Please specify directory name. ]</font>"
       end
       # highlight the updated div - so client notices
-      page.visual_effect :highlight, 'adding_directory_message'
+      page.visual_effect :highlight, 'updated_directory_message'
     end
+  end
+  
+  # PUT /servers/1
+  # PUT /servers/1.xml
+  def removedir
+  	@server = Earth::Server.find(params[:id])  	
+  	@removed = false
+  	@value = params[:dir_path]
+  	if @value != ''
+  		@server.remove_directory(@value)
+  		@removed = true
+  	end
+  	render :update do |page|
+  		# update the status
+  		if @removed
+  			page.replace_html 'updated_directory_message', "<font color=blue>[ Removing '#{@value}' directory. (~1s) ]</font>"
+  		else
+  			page.replace_html 'updated_directory_message', "<font color=blue>[ Please verify directory name. ]</font>"	
+  		end
+  		# highlighted the updated div - so client notices
+  		page.visual_effect :highlight, 'updated_directory_message'
+  	end
   end
 
 end
