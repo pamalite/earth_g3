@@ -217,14 +217,12 @@ class Earthd
       response = talk_to_server("add #{ARGV[1]}")
       puts response unless response == "OK"
     when "remove"
-      # $stderr.puts "Remove action is currently not implemented."
       response = talk_to_server("remove #{ARGV[1]}")
-      puts response unless response == "OK"
     when "clear"
       if not daemon_running?
         init_rails
-        #fileMonitor.logger = logger
-        #fileMonitor.database_cleanup
+        # fileMonitor.logger = logger
+        # fileMonitor.database_cleanup
       else
         $stderr.puts "ERROR: Cannot clear out the database while the daemon is running"
         exit 5
@@ -267,7 +265,7 @@ class Earthd
         end
       rescue Errno::ESRCH
         $stderr.puts "ERROR: The earth daemon doesn't appear to be running \n(PID file exists but process not found)"
-        exit 5
+        exit 5      
       end
     end
   end
@@ -287,7 +285,7 @@ class Earthd
         Process.kill("CHLD", daemon_pid)
         $stderr.puts "ERROR: earthd is already running with process id #{daemon_pid}"
       rescue Errno::ESRCH
-        $stderr.puts "ERROR: Another daemon has been running at process id #{daemon_pid} but it's apparantly no longer there"
+        $stderr.puts "ERROR: Another daemon has been running at process id #{daemon_pid} but it's apparently no longer there"
         $stderr.puts "Please ensure that there is no daemon running and remove file #{@daemon_pid_file}"
       end
       exit(5)
@@ -368,11 +366,12 @@ class Earthd
     else
     	if Earth::Server::this_server.directories.exists?(:path => path)
     		dir_id = Earth::Server::this_server.directories.find(:first, :conditions => [ "path = ?", path]).id
+    		logger.debug("Directory '#{path}' removed.")
     		Earth::Server::this_server.directories.destroy(dir_id)
+    	  return "OK"	
     	else
     		return "Cannot remove directory '#{path}': path not found."
     	end
-    	"OK"	
     end
   end
   
@@ -435,7 +434,7 @@ class Earthd
   def daemon_main()
     begin
 
-    log_file_logger = Logger.new(@log_file_name)
+    	log_file_logger = Logger.new(@log_file_name)
 
       if @options.foreground
         stdout_logger = Logger.new($stdout)

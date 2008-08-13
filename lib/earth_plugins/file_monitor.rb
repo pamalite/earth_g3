@@ -81,14 +81,14 @@ class FileMonitor < EarthPlugin
     logger.debug("Top-level directories loaded")    
     
     cache[:top_level_directories] ||= {}
-
-    directories.each do |directory|
+    
+    directories.each do |directory|      
       if not cache[:top_level_directories].keys.include? directory.id
         cache[:top_level_directories][directory.id] = directory
         benchmark "Collecting startup data for directory #{directory.path} from database" do
           directory.load_all_children(0)
         end
-      end
+      end      
     end
 
     cache[:top_level_directories].values.each do |directory|
@@ -115,7 +115,8 @@ class FileMonitor < EarthPlugin
     server.last_update_finish_time = Time.new.utc
     server.save!
     
-    run(cache[:top_level_directories].values, force_update_time) unless only_initial_update
+   	run(cache[:top_level_directories].values, force_update_time) unless only_initial_update
+
   end
   
   def directory_saved(node)
@@ -243,6 +244,13 @@ private
   def run(directories, force_update_time=nil)
     # At the beginning of every update get the server information in case it changes on the database
     server = Earth::Server.this_server
+    
+    # FL - Checks consistency of directories array to prevent daemon
+    #      dying when removing a directory.
+    if not directories.length == Earth::Directory.roots_for_server(server).length
+    	directories = Earth::Directory.roots_for_server(server)
+    end    
+    
     update_time = force_update_time || server.update_interval
     # Hmmm.. children_count doesn't include itself in the count
     directory_count = directories.map{|d| d.children_count + 1}.sum

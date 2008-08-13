@@ -71,4 +71,3 @@ if ENV['RAILS_ENV'] != "production"
   railsrc = "#{ENV['HOME']}/.railsrc" 
   load(railsrc) if FileTest.exist?(railsrc)
 end
-

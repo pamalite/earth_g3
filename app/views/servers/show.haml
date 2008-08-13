@@ -59,7 +59,9 @@
     %th.file-count Total Files
     %th.indexed Indexed
     %th.remove Remove
-  - for root in Earth::Directory::roots_for_server(@server)
+  - @directories = Earth::Directory::roots_for_server(@server)
+  - @directories.sort!{|a,b| a.name <=> b.name}
+  - for root in @directories
     %tr
       %td.icon.directory
       %td.path= root.name
