@@ -163,7 +163,7 @@ class ServersController < ApplicationController
     render :update do |page|
       # update the status
       if @added      
-        page.replace_html 'updated_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~1s) ]</font>"
+        page.replace_html 'updated_directory_message', "<font color=blue>[ Adding '#{@val}' directory. (~4s) ]</font>"
       else
         page.replace_html 'updated_directory_message', "<font color=blue>[ Please specify directory name. ]</font>"
       end
