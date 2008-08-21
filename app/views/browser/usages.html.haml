@@ -29,4 +29,4 @@
           %td.name.Server= Earth::Server.find_by_id(user_usage.server_id).name
           %td.owner_user= user_usage.uid
           %td.owner_user= User.find(user_usage.uid).name
-          %td.size= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage), user_usage.space_usage) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage)
+          %td.size= ApplicationHelper.human_size_in(ApplicationHelper.human_units_of(user_usage.space_usage.to_i), user_usage.space_usage.to_i) +  " " + ApplicationHelper.human_units_of(user_usage.space_usage.to_i)

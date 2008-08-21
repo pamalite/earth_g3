@@ -18,7 +18,11 @@ require 'csv'
 require 'pp'
 
 class BrowserController < ApplicationController
-  before_filter :load_context, :only => [:index,:flat,:show,:usages]
+
+  # Possible to add a view plugin hook here?
+  include UsagesHelper
+
+  before_filter :load_context, :only => $the_sections
   
   def index
     redirect_to :action => 'show'
@@ -143,20 +147,20 @@ class BrowserController < ApplicationController
   end
   
   # Ken: User space Usages (Ticket 66)
-  def usages
-    if @server == nil then
-      @users_space_usages = Earth::File.find(:all, 
-                                              :select => "sum(files.bytes) as space_usage, files.uid, directories.server_id",
-                                              :joins => "join directories on files.directory_id = directories.id",
-                                              :group => "files.uid, directories.server_id")
-    else
-      @users_space_usages = Earth::File.find(:all,
-                                              :select => "sum(files.bytes) as space_usage, files.uid, directories.server_id",
-                                              :joins => "join directories on files.directory_id = directories.id",
-                                              :group => "files.uid, directories.server_id",
-                                              :conditions => [ "server_id = ? ", @server ])
-    end
-  end
+  #def usages
+  #  if @server == nil then
+  #    @users_space_usages = Earth::File.find(:all,
+  #                                            :select => "sum(files.bytes) as space_usage, files.uid, directories.server_id",
+  #                                            :joins => "join directories on files.directory_id = directories.id",
+  #                                            :group => "files.uid, directories.server_id")
+  #  else
+  #    @users_space_usages = Earth::File.find(:all,
+  #                                            :select => "sum(files.bytes) as space_usage, files.uid, directories.server_id",
+  #                                            :joins => "join directories on files.directory_id = directories.id",
+  #                                            :group => "files.uid, directories.server_id",
+  #                                            :conditions => [ "server_id = ? ", @server ])
+  #  end
+  #end
 
   def auto_complete_for_filter_user
     if User.ldap_configured?

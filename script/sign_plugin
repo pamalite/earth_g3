@@ -19,7 +19,8 @@
 require 'optparse'
 require 'ostruct'
 require 'rubygems'
-require_gem 'termios'
+gem 'termios'
+require 'termios'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'earth_plugin_interface', 'plugin_manager')
 
@@ -50,7 +51,7 @@ class SignPluginCommand
   def validate_command_line
     if not File.exist? @options.key_file
       if @options.key_file == DEFAULT_KEY_FILE
-        raise "The default key file does not exist; you can generate it by running 'pluginmanager/create_cert.rb'"
+        raise "The default key file does not exist; you can generate it by running 'script/create_cert.rb'"
       else
         raise "The key file #{@options.key_file} does not exist"
       end
@@ -91,6 +92,11 @@ class SignPluginCommand
   end
 
   def run
+    if ARGV.length <= 0 then
+      $stderr.puts "No plugin to sign."
+      exit
+    end if
+
     plugin_manager = PluginManager.new
 
     password = read_password("Enter password for key #{@options.key_file}: ")
