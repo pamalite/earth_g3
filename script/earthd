@@ -399,6 +399,9 @@ class Earthd
     require File.join(File.dirname(__FILE__), '../config/environment')
     if not LOAD_FILE_MONITOR_AS_PLUGIN
       require File.join(File.dirname(__FILE__), '..', 'lib', 'earth_plugins', 'file_monitor.rb')
+      
+      # Bogus plugin
+      require File.join(File.dirname(__FILE__), '..', 'lib', 'earth_plugins', 'bogus_plugin.rb')
     end
   end    
 
@@ -484,10 +487,13 @@ class Earthd
 
       if not LOAD_FILE_MONITOR_AS_PLUGIN
         @file_monitor = FileMonitor.new
+        @mr_bogus = BogusPlugin.new
       end
 
       while true
-
+        @mr_bogus.logger = logger
+        @mr_bogus.doWork
+        
         begin
           if LOAD_FILE_MONITOR_AS_PLUGIN
             @file_monitor = @plugin_manager.load_plugin("EarthFileMonitor", loaded_plugin_versions["EarthFileMonitor"]) || @file_monitor
@@ -520,6 +526,7 @@ class Earthd
             raise
           end
         end
+        
       end
     rescue => err
       logger.fatal("Exiting: Daemon died")      
