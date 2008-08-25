@@ -1,15 +1,15 @@
 # Copyright (C) 2007 Rising Sun Pictures and Matthew Landauer
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -40,7 +40,7 @@ class PluginManager
     if @trusted_certificates.nil?
       @trusted_certificates = []
       trusted_certificate_directory = File.join(File.dirname(__FILE__), "..", "..", "config", "certificates")
-      Dir.entries(trusted_certificate_directory).each do |filename| 
+      Dir.entries(trusted_certificate_directory).each do |filename|
         certificate_file = File.join(trusted_certificate_directory, filename)
         if File.file?(certificate_file) and File.readable?(certificate_file)
           begin
@@ -70,7 +70,7 @@ class PluginManager
 
     signer = nil
     trusted_certificates.each do |trusted_certificate|
-      begin 
+      begin
         signer = trusted_certificate.subject if trusted_certificate.public_key.verify(OpenSSL::Digest::SHA1.new, signature, code)
       rescue
       end
@@ -93,7 +93,7 @@ class PluginManager
 
   def install_from_file(plugin_filename)
     code = File.read(plugin_filename)
-    
+
     signature_filename = plugin_filename + ".sha1"
     begin
       signature = File.read(signature_filename)
@@ -107,7 +107,7 @@ class PluginManager
     new_plugin_class = get_plugin_class(code, signature)
 
     existing_plugin = Earth::PluginDescriptor::find(:first, :conditions => { :name => new_plugin_class.plugin_name })
-    if not existing_plugin.nil? 
+    if not existing_plugin.nil?
       if existing_plugin.version == new_plugin_class.plugin_version
         raise PluginManagerError, "Refusing to install plugin: This version of this plugin is already installed (#{existing_plugin.version} == #{new_plugin_class.plugin_version})."
       elsif existing_plugin.version > new_plugin_class.plugin_version
@@ -127,10 +127,17 @@ class PluginManager
     return nil unless newPlugin
 
     new_plugin_class = get_plugin_class(newPlugin.code, newPlugin.sha1_signature)
-    
-    #logger.info("New plugin \"#{name}\" available (version #{validated_plugin_class.plugin_version})")
-    
+
     new_plugin_class.new
   end
-  
+
+  def load_all_plugins
+    allPlugins = Earth::PluginDescriptor::find(:all)
+    listPlugins = Array.new
+    allPlugins.each do |p|
+      a_plugin_object = load_plugin("#{p.name}", "#{p.version}")
+      listPlugins << a_plugin_object
+    end
+    return listPlugins
+  end
 end

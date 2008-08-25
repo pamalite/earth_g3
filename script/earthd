@@ -1,22 +1,20 @@
 #!/usr/bin/env ruby
 
 # Copyright (C) 2007 Rising Sun Pictures and Matthew Landauer
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-LOAD_FILE_MONITOR_AS_PLUGIN = true
 
 require 'optparse'
 require 'ostruct'
@@ -30,7 +28,7 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'earthd_helper.rb')
 
 BANNER = <<END_OF_STRING
 
-USAGE: 
+USAGE:
   #{$0} [-c FILE] start [-f] [-v ...] [-q ...]   -  Start the Earth daemon on localhost
   #{$0} [-c FILE] stop                           -  Stop the Earth daemon on localhost
   #{$0} [-c FILE] restart                        -  Restart the Earth daemon on localhost
@@ -55,7 +53,7 @@ class Earthd
     opts = OptionParser.new
     opts.banner = BANNER
     opts.separator "General Options:"
-    opts.on("-c", "--configuration FILE", "Read configuration from FILE instead of ~/.earthd.yml or /etc/earthd.yml.") do |config_file| 
+    opts.on("-c", "--configuration FILE", "Read configuration from FILE instead of ~/.earthd.yml or /etc/earthd.yml.") do |config_file|
       @options.config_file = config_file
     end
     opts.separator ""
@@ -67,7 +65,7 @@ class Earthd
       @options.verbosity += 1
     end
     opts.on("-q", "--quiet", "Decrease verbosity level of console output when running in foreground.") do
-      @options.verbosity -= 1 
+      @options.verbosity -= 1
     end
     opts.separator ""
     opts.separator "Debugging options:"
@@ -91,9 +89,9 @@ class Earthd
       puts opts
       exit 1
     end
-    
+
     @action = ARGV[0]
-    
+
     accepted_actions = [ "start", "stop", "restart", "status", "clear", "add", "remove" ]
     if not accepted_actions.include? @action
       $stderr.puts "ERROR: unknown action #{@action}. Accepted actions are #{accepted_actions.inspect}"
@@ -112,7 +110,7 @@ class Earthd
       puts opts
       exit 1
     end
-   
+
     if @options.config_file and not File.exist? @options.config_file
       $stderr.puts "ERROR: the configuration file #{@options.config_file} does not exist."
       exit 1
@@ -241,7 +239,7 @@ class Earthd
       true
     end
   end
-  
+
   def report_not_running
     $stderr.puts "earthd not running on #{hostname}"
   end
@@ -252,7 +250,7 @@ class Earthd
       report_not_running
     else
       begin
-        Process.kill("CHLD", daemon_pid)        
+        Process.kill("CHLD", daemon_pid)
         if File.exist? @server_socket_path
           client = UNIXSocket.open(@server_socket_path)
           client.send(request, 0)
@@ -265,7 +263,7 @@ class Earthd
         end
       rescue Errno::ESRCH
         $stderr.puts "ERROR: The earth daemon doesn't appear to be running \n(PID file exists but process not found)"
-        exit 5      
+        exit 5
       end
     end
   end
@@ -303,7 +301,7 @@ class Earthd
       end
     end
   end
-  
+
   def stop()
     daemon_pid = PidFile.recall(@daemon_pid_file)
     if daemon_pid
@@ -322,7 +320,7 @@ class Earthd
     message = "Uptime: #{format_uptime(Time.now - @start_time)}\n"
     message += "Status: #{@booted ? 'Running' : 'Booting'}\n"
     if @booted
-      message += "File Monitor Status: #{@file_monitor.status_info}\n"
+      # message += "File Monitor Status: #{@file_monitor.status_info}\n"
       message += "Daemon Version: #{@daemon_version.strip}\n"
     end
     message
@@ -352,7 +350,7 @@ class Earthd
       "OK"
     end
   end
-  
+
   def daemon_remove_directory(path)
     logger.debug("received request to remove directory '#{path}'")
     if not @booted
@@ -368,13 +366,13 @@ class Earthd
     		dir_id = Earth::Server::this_server.directories.find(:first, :conditions => [ "path = ?", path]).id
     		logger.debug("Directory '#{path}' removed.")
     		Earth::Server::this_server.directories.destroy(dir_id)
-    	  return "OK"	
+        return "OK"
     	else
     		return "Cannot remove directory '#{path}': path not found."
     	end
     end
   end
-  
+
   def handle_client_connection(socket)
     begin
       message = socket.recv(1024)
@@ -391,7 +389,7 @@ class Earthd
       socket.send(response, 0)
       logger.debug("Server sent response to message #{message}")
     rescue => err
-      logger.fatal("Failure in client connection handler")      
+      logger.fatal("Failure in client connection handler")
       logger.fatal(err)
     end
   end
@@ -421,10 +419,7 @@ class Earthd
     # Set environment to run in
     ENV["RAILS_ENV"] = @config["rails_environment"]
     require File.join(File.dirname(__FILE__), '../config/environment')
-    if not LOAD_FILE_MONITOR_AS_PLUGIN
-      require File.join(File.dirname(__FILE__), '..', 'lib', 'earth_plugins', 'file_monitor.rb')
-    end
-  end    
+  end
 
   def daemon_stop()
     File.unlink(@daemon_pid_file) if File.exist? @daemon_pid_file
@@ -434,7 +429,7 @@ class Earthd
   def daemon_main()
     begin
 
-    	log_file_logger = Logger.new(@log_file_name)
+      log_file_logger = Logger.new(@log_file_name)
 
       if @options.foreground
         stdout_logger = Logger.new($stdout)
@@ -488,7 +483,7 @@ class Earthd
       server = Earth::Server.this_server
       server.daemon_version = @daemon_version
       server.save!
-      
+
       at_exit { server = Earth::Server.this_server; server.daemon_version = nil; server.save! }
 
       logger.debug("Daemon version updated")
@@ -498,55 +493,43 @@ class Earthd
       @booted = true
       logger.info("Entering main loop")
 
-      cache = {}
+      @loaded_plugins = {}
 
-      loaded_plugin_versions = {}
+      cache = {}
 
       @plugin_manager = PluginManager.new
 
-      last_known_good_file_monitor = nil
-
-      if not LOAD_FILE_MONITOR_AS_PLUGIN
-        @file_monitor = FileMonitor.new
-      end
+      @currentplugin = nil
 
       while true
 
         begin
-          if LOAD_FILE_MONITOR_AS_PLUGIN
-            @file_monitor = @plugin_manager.load_plugin("EarthFileMonitor", loaded_plugin_versions["EarthFileMonitor"]) || @file_monitor
-            raise RuntimeError, "No file monitor plugin installed." unless @file_monitor
-            if loaded_plugin_versions["EarthFileMonitor"].nil? or loaded_plugin_versions["EarthFileMonitor"] < @file_monitor.class.plugin_version
-              loaded_plugin_versions["EarthFileMonitor"] = @file_monitor.class.plugin_version
-            end
-            
-            raise RuntimeError, "No file monitor found in database!" unless @file_monitor
-            logger.info("Using file monitor version #{@file_monitor.class.plugin_version}")
-          end
-          @file_monitor.logger = logger
-          @file_monitor.iteration(cache, false, @config["override_update_interval"])
-          if last_known_good_file_monitor and last_known_good_file_monitor != @file_monitor
-            Class.remove_class(last_known_good_file_monitor.class)
-          end
-          last_known_good_file_monitor = @file_monitor
-        rescue => err
-          if last_known_good_file_monitor \
-            and last_known_good_file_monitor != @file_monitor \
-            and LOAD_FILE_MONITOR_AS_PLUGIN
+          logger.info("About to load plugins from database.")
+          # LOADING ALL AVAILABLE PLUGINS
+          @loaded_plugins = @plugin_manager.load_all_plugins
+          raise RuntimeError, "No plugin found in database!" unless @loaded_plugins
 
-            logger.error("Daemon caught fatal error from file monitor") 
-            logger.error(err)
-            logger.warn("Retrying with last known good file monitor version") 
-            Class.remove_class(@file_monitor)
-            @file_monitor = last_known_good_file_monitor
-            retry
-          else
-            raise
+          logger.info("About to iterate through each loaded plugin.")
+
+					logger.info("Fetching plugins.")
+					@loaded_plugins.each do |plugin|
+						logger.info("Iterating through plugin loop.")
+						@currentplugin = @plugin_manager.load_plugin("EarthFileMonitorPlugin", nil) unless @currentplugin
+						logger.info("...plugin manager successful...")
+						@currentplugin.logger = logger
+						logger.info("About to execute plugin main method. ")
+						#@currentplugin.main(cache)
+						#@currentplugin.iteration(cache, false, 10)
+						@currentplugin.iteration(cache)
+						logger.info("Plugin main method executed.")
           end
+        rescue => err
+          logger.info("Rescue part of internal loop.")
+          raise
         end
       end
     rescue => err
-      logger.fatal("Exiting: Daemon died")      
+      logger.fatal("Exiting: Daemon died")
       logger.fatal(err)
       $stderr.puts "The earth daemon has died. You can find additional information in #{@log_file_name}"
     ensure

@@ -16,9 +16,11 @@
 
 # Drop the cached_sizes table
 class DropCachedSizes < ActiveRecord::Migration
+
   def self.up
     drop_table :cached_sizes
   end
+
   def self.down
     create_table :cached_sizes do |t|
       t.column :directory_id, :integer, :null => false
@@ -26,9 +28,8 @@ class DropCachedSizes < ActiveRecord::Migration
       t.column :blocks, :integer, :limit => 19, :default => 0, :null => false   # allow for a zettabyte
       t.column :count, :integer, :default => 0, :null => false
       t.foreign_key :directory_id, :directories, :id, { :on_delete => :cascade, :name => "cached_sizes_directories_id_fk"  }
-    execute "UPDATE cached_sizes SET bytes=(SELECT bytes FROM directories where id=cached_sizes.directory_id), blocks=(SELECT blocks FROM directories where id=cached_sizes.directory_id), count=(SELECT count FROM directories where id=cached_sizes.directory_id)"
     end
-    
+    execute "UPDATE cached_sizes SET bytes=(SELECT bytes FROM directories where id=cached_sizes.directory_id), blocks=(SELECT blocks FROM directories where id=cached_sizes.directory_id), count=(SELECT count FROM directories where id=cached_sizes.directory_id)"
   end
 end
 
