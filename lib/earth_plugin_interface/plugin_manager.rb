@@ -75,9 +75,9 @@ class PluginManager
       rescue
       end
     end
-    if signer.nil?
-      raise PluginManagerError, "Plugin signature could not be verified"
-    end
+    #if signer.nil?
+    #  raise PluginManagerError, "Plugin signature could not be verified"
+    #end
 
     EarthPlugin.on_inheritance do |child|
       @plugin_class = child

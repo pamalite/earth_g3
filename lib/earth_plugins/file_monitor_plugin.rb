@@ -24,7 +24,6 @@ class FileMonitorPlugin < EarthPlugin
 
   @logger = nil
 
-  # cache = {}
 
   def logger=(logger)
     @logger = logger
@@ -42,9 +41,10 @@ class FileMonitorPlugin < EarthPlugin
     132
   end
 
-  #def main(cache)
-  #	iteration(cache)
-  #end
+  def main
+    cache = {}
+    iteration(cache)
+  end
 
   class ETAPrinter
     def initialize(file_monitor, description, number_of_items)

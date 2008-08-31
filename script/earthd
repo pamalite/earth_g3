@@ -495,8 +495,6 @@ class Earthd
 
       @loaded_plugins = {}
 
-      cache = {}
-
       @plugin_manager = PluginManager.new
 
       @currentplugin = nil
@@ -518,9 +516,7 @@ class Earthd
 						logger.info("...plugin manager successful...")
 						@currentplugin.logger = logger
 						logger.info("About to execute plugin main method. ")
-						#@currentplugin.main(cache)
-						#@currentplugin.iteration(cache, false, 10)
-						@currentplugin.iteration(cache)
+						@currentplugin.main
 						logger.info("Plugin main method executed.")
           end
         rescue => err
