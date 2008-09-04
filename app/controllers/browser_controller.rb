@@ -40,7 +40,7 @@ class BrowserController < ApplicationController
     @current_page = (params[:page] || 1).to_i
 
     @default_sort_by = [ "size", nil, nil ]
-    @max_num_sort_criteria = 3
+    @max_num_sort_criteria = 1
 
     @default_order = {
       "name" => "asc",
@@ -109,7 +109,11 @@ class BrowserController < ApplicationController
                                      :conditions => conditions)
       @page_count = (file_count + @page_size - 1) / @page_size
       
-      @files = Earth::File.find(:all, 
+      @files = Earth::File.find(:all)
+      
+      @files = nil
+      
+      @files = Earth::File.find(:all,                                 
                                 :select => select,
                                 :joins => joins,
                                 :conditions => conditions,
