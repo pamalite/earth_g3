@@ -82,6 +82,7 @@ class PluginManager
     EarthPlugin.on_inheritance do |child|
       @plugin_class = child
     end
+    
     eval("module PluginModule_#{@@plugin_module_counter}\n" + code + "\nend\n")
     @@plugin_module_counter +=1
     new_plugin_class = @plugin_class
@@ -114,8 +115,17 @@ class PluginManager
         raise PluginManagerError, "Refusing to install plugin: A newer version of this plugin is already installed (#{existing_plugin.version} > #{new_plugin_class.plugin_version})."
       end
     end
+    
+    # Ken: Due to the problem with PostgresSQL, Ruby and Rails not sharing a 
+    #      common ground with UTF-8 encoding, we will now encode all codes 
+    #      and signatures into Base64 strings and store it into the databse 
+    #      without loosing integrity
+    b64_code = Base64.b64encode(code)
+    b64_signature = Base64.b64encode(signature)
+    
     Earth::PluginDescriptor::delete(existing_plugin) if existing_plugin
-    Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code => code, :sha1_signature => signature)
+    #Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code => code, :sha1_signature => signature)
+    Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code => b64_code, :sha1_signature => b64_signature)
   end
 
   def load_plugin(name, last_loaded_version)
@@ -126,7 +136,13 @@ class PluginManager
     end
     return nil unless newPlugin
 
-    new_plugin_class = get_plugin_class(newPlugin.code, newPlugin.sha1_signature)
+    # Ken: Since we stored the plugins in Base64 strings, we will need to decode
+    #      them before we use.
+    code = Base64.decode64(newPlugin.code)
+    signature = Base64.decode64(newPlugin.sha1_signature)
+    
+    #new_plugin_class = get_plugin_class(newPlugin.code, newPlugin.sha1_signature)
+    new_plugin_class = get_plugin_class(code, signature)
     
     #logger.info("New plugin \"#{name}\" available (version #{validated_plugin_class.plugin_version})")
     

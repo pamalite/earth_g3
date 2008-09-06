@@ -29,7 +29,7 @@ class ApiFileMonitor
     @logger || RAILS_DEFAULT_LOGGER
   end
   
-  load File.join(File.dirname(__FILE__), 'api_eta_printer.rb')
+  load File.join(File.dirname(__FILE__), 'Eapi_EtaPrinter.rb')
   
   # Set this to true if you want to see the individual SQL commands
   self.log_all_sql = false
@@ -292,12 +292,12 @@ private
           #        Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
           #           directory.files.create(:name => name, :stat => stats[name])
           #        end
-          pathArray = "#{directory.path}".split('/')
-          seq = pathArray.last
-          job = pathArray[pathArray.length-2]
-          Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
-            directory.files.create(:name => name, :job => job, :sequence => seq, :shot => name, :stat => stats[name])
-          end
+         # pathArray = "#{directory.path}".split('/')
+          #seq = pathArray.last
+         # job = pathArray[pathArray.length-2]
+         # Earth::File.benchmark("Creating file with name #{name}", Logger::DEBUG, !log_all_sql) do
+         #   directory.files.create(:name => name, :job => job, :sequence => seq, :shot => name, :stat => stats[name])
+         # end
           # Jon : End include 'job' and 'sequence' into the table 'files'
           
         end
