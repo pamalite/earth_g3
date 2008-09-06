@@ -493,7 +493,7 @@ class Earthd
       @booted = true
       logger.info("Entering main loop")
 
-      @loaded_plugins = {}
+      @loaded_plugin_names = {}
 
       @plugin_manager = PluginManager.new
 
@@ -502,26 +502,17 @@ class Earthd
       while true
 
         begin
-          logger.info("About to load plugins from database.")
-          # LOADING ALL AVAILABLE PLUGINS
-          @loaded_plugins = @plugin_manager.load_all_plugins
-          raise RuntimeError, "No plugin found in database!" unless @loaded_plugins
-
-          logger.info("About to iterate through each loaded plugin.")
-
-					logger.info("Fetching plugins.")
-					@loaded_plugins.each do |plugin|
-						logger.info("Iterating through plugin loop.")
-						@currentplugin = @plugin_manager.load_plugin("EarthFileMonitorPlugin", nil) unless @currentplugin
-						logger.info("...plugin manager successful...")
+          logger.info("Loading plugins from database.")
+          @loaded_plugin_names = @plugin_manager.load_all_plugin_names
+          raise RuntimeError, "No plugin found in database!" unless @loaded_plugin_names
+					@loaded_plugin_names.each do |pname|
+						@currentplugin = @plugin_manager.load_plugin(pname.to_s, nil) unless @currentplugin
 						@currentplugin.logger = logger
-						logger.info("About to execute plugin main method. ")
+						logger.info("Executing Plugin #{pname.to_s} main method. ")
 						@currentplugin.main
-						logger.info("Plugin main method executed.")
           end
         rescue => err
-          logger.info("Rescue part of internal loop.")
-          raise
+          raise RuntimeError, "Plugin loading loop died!."
         end
       end
     rescue => err

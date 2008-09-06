@@ -149,13 +149,13 @@ class PluginManager
     new_plugin_class.new
   end
 
-  def load_all_plugins
-    allPlugins = Earth::PluginDescriptor::find(:all)
-    listPlugins = Array.new
-    allPlugins.each do |p|
-      a_plugin_object = load_plugin("#{p.name}", "#{p.version}")
-      listPlugins << a_plugin_object
+  def load_all_plugin_names
+    allPluginNames = Earth::PluginDescriptor::find(:all)
+    listPluginNames = Array.new
+    allPluginNames.each do |pn|
+      pname = pn.name
+      listPluginNames << pname
     end
-    return listPlugins
+    return listPluginNames
   end
 end
