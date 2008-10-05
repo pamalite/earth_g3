@@ -17,7 +17,7 @@
 require 'openssl'
 
 require File.join(File.dirname(__FILE__), 'earth_plugin')
-
+#require File.join(File.dirname(__FILE__), '..', '..', 'app', 'models','earth','extension_point')
 class PluginManagerError < RuntimeError
   def initialize(message)
     @message = message
@@ -92,7 +92,30 @@ class PluginManager
     new_plugin_class
   end
 
-  def install_from_file(plugin_filename)
+  def uninstall(plugin_name)
+    begin
+      ENV["RAILS_ENV"] = "development"
+      require File.join(File.dirname(__FILE__), '..', '..', 'config', 'environment')
+      
+      # Ken: Shouldn't this be
+      uninstall_plugin = Earth::PluginDescriptor.find(:first, 
+                                                      :select => "id", 
+                                                      :conditions => [ "name = ?", plugin_name ])
+      #uninstall_plugin = Earth::PluginDescriptor.find(:all)
+    rescue Errno::ENOENT
+       raise PluginManagerError, "No such plugin installed  in  database!"
+       
+       # Ken: Stop the script from continuing to remove the plugin.
+       return false
+    end
+    
+    # Ken: Shouldn't this be
+    Earth::PluginDescriptor.delete(uninstall_plugin.id)
+    #Earth::PluginDescriptor::delete(uninstall_plugin)      
+  end
+    
+
+  def install_from_file(plugin_filename,ext_point_name,host_plugin)
     code = File.read(plugin_filename)
     
     signature_filename = plugin_filename + ".sha1"
@@ -118,19 +141,24 @@ class PluginManager
     
     # Ken: Due to the problem with PostgresSQL, Ruby and Rails not sharing a 
     #      common ground with UTF-8 encoding, we will now encode all codes 
-    #      and signatures into Base64 strings and store it into the databse 
+    #      and signatures into Base64 strings and store it into the database 
     #      without loosing integrity
     b64_code = Base64.b64encode(code)
     b64_signature = Base64.b64encode(signature)
+
+     #Ida:Find extension point id ,in terms of the extension_point_name and host_name.
+    extension_point=Earth::ExtensionPoint.find(:first, :conditions => { :name => ext_point_name,:host_plugin=>host_plugin })
+    extension_point_id=extension_point.id
+     
     
     Earth::PluginDescriptor::delete(existing_plugin) if existing_plugin
     #Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code => code, :sha1_signature => signature)
-    Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code => b64_code, :sha1_signature => b64_signature)
+    Earth::PluginDescriptor::create(:name => new_plugin_class.plugin_name, :version => new_plugin_class.plugin_version, :code =>    b64_code, :sha1_signature => b64_signature,:extension_point_id =>extension_point_id)
   end
 
   def load_plugin(name, last_loaded_version)
     if last_loaded_version
-      newPlugin = Earth::PluginDescriptor::find(:first, :conditions => [ "name = ? and version > ?", name, last_loaded_version ])
+      newPlugin = Earth::PluginDescriptor::find(:first, :conditions => [ "name = ? and version >= ?", name, last_loaded_version ])
     else
       newPlugin = Earth::PluginDescriptor::find(:first, :conditions => [ "name = ?", name ])
     end
@@ -149,4 +177,50 @@ class PluginManager
     new_plugin_class.new
   end
   
+  def list_plugins(flag, plugin)
+    ENV["RAILS_ENV"] = "development"
+    require File.join(File.dirname(__FILE__), '..', '..', 'config', 'environment')
+    plugins = nil
+    
+    if flag == "all" and plugin == "none"
+      plugins = Earth::PluginDescriptor::find(:all, :select => "name as plugin_name", 
+                                              :order => "plugin_name")
+                                    
+    elsif flag == "info" and plugin == "none"
+      plugins = Earth::PluginDescriptor.find(:all, 
+                        :select => "plugin_descriptors.name as plugin_name, 
+                                    plugin_descriptors.version,
+                                    extension_points.name as extension,
+                                    extension_points.host_plugin",
+                        :joins => "left join extension_points on
+                                    extension_points.id = plugin_descriptors.extension_point_id",
+                        :order => "plugin_name")
+    else
+      plugins = Earth::PluginDescriptor.find(:all, 
+                        :select => "plugin_descriptors.name as plugin_name, 
+                                    plugin_descriptors.version,
+                                    extension_points.name as extension,
+                                    extension_points.host_plugin",
+                        :joins => "left join extension_points on
+                                    extension_points.id = plugin_descriptors.extension_point_id",
+                        :conditions => [ "plugin_descriptors.name = ?", plugin], 
+                        :order => "plugin_name")
+    end
+    
+    if plugins.length == 0 or plugins == nil
+      if plugin == "" then
+        puts "There is no plugin installed."
+      else
+        puts "There is no plugin installed with the name '" + plugin + "'."
+      end
+    else
+      plugins.each do |plugin|
+        if flag == "all"
+          puts plugin.plugin_name
+        else
+          puts plugin.plugin_name + "( v" + plugin.version.to_s  + " ) <= " + plugin.host_plugin + "." + plugin.extension
+        end
+      end
+    end
+  end
 end
