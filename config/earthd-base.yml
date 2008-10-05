@@ -22,7 +22,7 @@ log_file: /tmp/earthd.log
 # file might grow rapidly and you may want to make sure that there is
 # enough space for it and maybe put log rotation in place.
 #
-log_level: DEBUG
+log_level: FATAL
 
 #
 # The rails environment to run in. This can be one of production,

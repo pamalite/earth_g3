@@ -38,7 +38,7 @@ log_level: WARN
 # This option is likely to be removed in the future in favor of direct 
 # database configuration
 #
-rails_environment: production
+rails_environment: development
 
 #
 # Ignore update_interval stored in database and use given update

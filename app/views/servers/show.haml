@@ -58,7 +58,10 @@
     %th.directory-count Total Directories
     %th.file-count Total Files
     %th.indexed Indexed
-  - for root in Earth::Directory::roots_for_server(@server)
+    %th.remove Remove
+  - @directories = Earth::Directory::roots_for_server(@server)
+  - @directories.sort!{|a,b| a.name <=> b.name}
+  - for root in @directories
     %tr
       %td.icon.directory
       %td.path= root.name
@@ -66,6 +69,24 @@
       %td.directory-count= number_with_delimiter(root.recursive_directory_count)
       %td.file-count= number_with_delimiter(root.size.count)
       %td.indexed= root.cache_complete? ? "Yes" : "Pending"
+      %td.remove 
+        - remote_form_for(:server, :url => url_for(:action => :removedir, :params => {:id => @server.id}), :html => {:multipart => true}) do |r|
+          %input{:type => "hidden",	:id => "remove_dir_path",	:name	=> "dir_path", :value => root.path}
+          = submit_tag "Delete", :id => "remove_dir_button", :onclick => "refreshNow()"
+
+%p
+  - remote_form_for(:server, :url => url_for(:action => :adddir, :params => {:id => @server.id}), :html => { :multipart => true}) do |f|
+    - if daemon_alive(@server)
+      %input{:type => "text",   :id => "select_dir_text",   :name => "directory_name"} 
+      = submit_tag "Add Directory ", :id => "submit_adddir_button", :onclick => "refreshDelay()"
+    - else
+      %input{:type => "text",   :id => "select_dir_text", :disabled => "true"}  
+      = submit_tag "Add Directory ", :id => "submit_adddir_button", :disabled => "true"
+      %br
+        %font{:color => "red", :size => "3"}Attention: Directory can only be added if daemon is running.
+
+
+%p{:id => 'updated_directory_message'}
 
 %h2= "Users space usages on " + @server.name
 %table#server-space_usage

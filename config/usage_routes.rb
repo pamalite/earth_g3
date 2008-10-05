@@ -10,3 +10,4 @@ module UsageRoutes
     :requirements => {:server => hostname_regex}
   end
 end
+

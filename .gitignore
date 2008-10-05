@@ -1,4 +1,2 @@
-.DS_Store
-.svn
-log
-tmp
+db/schema.rb
+log/*

@@ -16,19 +16,37 @@
 
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+<<<<<<< HEAD:app/helpers/application_helper.rb
   
+=======
+
+>>>>>>> 0f0464179d5da4d0d22b3e9345bece9aa02136e4:app/helpers/application_helper.rb
   $the_sections = [:index, :flat,:show]
+<<<<<<< HEAD:app/helpers/application_helper.rb
   
   $tab_info =  
     [ 
+=======
+
+  $tab_info =
+    [
+>>>>>>> 0f0464179d5da4d0d22b3e9345bece9aa02136e4:app/helpers/application_helper.rb
       { :title => "navigation", :controller => "browser", :action => "show" },
       { :title => "all files",  :controller => "browser", :action => "flat" },
       { :title => "radial",    :controller => "graph",   :action => "index" }
     ]
+<<<<<<< HEAD:app/helpers/application_helper.rb
    
+=======
+
+>>>>>>> 0f0464179d5da4d0d22b3e9345bece9aa02136e4:app/helpers/application_helper.rb
   # Possible to add a view plugin hook here?
   #include UsagesHelper
+<<<<<<< HEAD:app/helpers/application_helper.rb
     
+=======
+
+>>>>>>> 0f0464179d5da4d0d22b3e9345bece9aa02136e4:app/helpers/application_helper.rb
   def self_and_ancestors_up_to(directory, parent_dir)
     if parent_dir.nil?
       directory.self_and_ancestors
@@ -51,6 +69,7 @@ module ApplicationHelper
 
 
   def ApplicationHelper::human_units_of(size)
+    size = Kernel.Float(size)
     case 
       when size < 1.kilobyte: 'Bytes'
       when size < 1.megabyte: 'KB'
@@ -155,7 +174,7 @@ module ApplicationHelper
   end
   
   #def tab_info
-  #  [ 
+  #  [
   #    { :title => "navigation", :controller => "browser", :action => "show" },
   #    { :title => "all files",  :controller => "browser", :action => "flat" },
   #    { :title => "radial",    :controller => "graph",   :action => "index" } 

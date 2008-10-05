@@ -23,7 +23,7 @@
     = @server.name
   %p
     %b Update interval (in seconds)
-    %br/
+    %br/ 
     = f.text_field :update_interval
   %p
     %b Heartbeat interval (in seconds)
@@ -34,4 +34,3 @@
 = link_to 'Show', :action => :show, :params => {:server => @server.name }
 |
 = link_to 'Back', servers_path
-

@@ -24,4 +24,23 @@ module ServersHelper
       "unknown"
     end
   end
+
+  def daemon_alive(server)
+    if server.daemon_alive?
+      true
+    elsif server.daemon_version.nil?
+      false
+    else
+      false
+    end
+  end
+
+  def current_time(server)
+    "The current time is #{Time.now.to_s}"
+  end
+
+  def daemon_info(server)
+    server.get_daemon_status
+  end
+
 end

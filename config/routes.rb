@@ -59,7 +59,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Ken: setup controller "browser", action "usages"
   mapPluginRoute(map, hostname_regex)
-  
+
   # setup controller "graph", action "show"
   map.connect '/graph/show', :controller => "graph", :action => "show"
   map.connect '/graph/show/:server', :controller => "graph", :action => "show",
@@ -79,6 +79,14 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/servers/edit/:server', :controller => "servers", :action => "edit",
     :requirements => {:server => hostname_regex}
   map.connect '/servers/update/:server', :controller => "servers", :action => "update",
+    :requirements => {:server => hostname_regex}
+
+  # FL: setup controller "server", action "configure"
+  map.connect '/servers/configure/:server', :controller => "servers", :action => "configure",
+    :requirements => {:server => hostname_regex}
+
+  # FL: setup controller "server", action "execute"
+  map.connect '/servers/execute/:server', :controller => "servers", :action => "execute",
     :requirements => {:server => hostname_regex}
 
   # Allow downloading Web Service WSDL as a file with an extension

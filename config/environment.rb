@@ -12,13 +12,13 @@ RAILS_GEM_VERSION = '1.2.5'
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-  # Settings in config/environments/* take precedence those specified here
+  # Settings in config/environments/* take precedence over those specified here
   
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/daemon )
+  # config.load_paths += %W( #{RAILS_ROOT}/daemon )
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
@@ -71,4 +71,3 @@ if ENV['RAILS_ENV'] != "production"
   railsrc = "#{ENV['HOME']}/.railsrc" 
   load(railsrc) if FileTest.exist?(railsrc)
 end
-

@@ -9,7 +9,6 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -83,5 +82,75 @@ module Earth
       roots = Earth::Directory.roots_for_server(self) 
       (not roots.empty?) and roots.all? { |d| d.cache_complete? and not d.children.empty? }
     end
-  end
+
+    def fork_daemon
+      initialize_daemon
+      fork do
+        puts "Launching daemon in background"
+        exec("#{@daemon} start")
+      end
+    end
+   
+    def refork_daemon
+      initialize_daemon
+      fork do
+        puts "Restarting daemon in background"
+        exec("#{@daemon} restart")
+      end
+    end   
+    
+    def get_daemon_pid
+      if @daemon_pid.nil?
+        @daemon_pid = fork_daemon
+        "[server.rb] Daemon not running - Starting daemon instead"
+      else
+        @daemon_pid = refork_daemon
+      end
+    end 
+
+    def unfork_daemon
+      initialize_daemon
+      fork do
+        puts "Killing daemon"
+        exec("#{@daemon} stop")
+      end
+    end
+    
+    def clear_daemon
+      initialize_daemon
+      fork do
+        puts "Clearing daemon"
+        exec("#{@daemon} clear")
+      end
+    end
+    
+    def initialize_daemon
+      @daemon = "script/earthd"
+    end
+
+    def get_daemon_status
+      initialize_daemon
+      fork do
+        puts "Getting daemon status"
+        exec("#{@daemon} status")
+      end  
+      @info
+    end
+
+   def add_directory(directory_name)
+     initialize_daemon
+     fork do
+       puts "Adding dir to monitor"
+       exec("#{@daemon} add #{directory_name}")
+     end
+   end
+   
+   def remove_directory(directory_path)
+   	initialize_daemon
+   	fork do
+   		puts "Removing monitored directory"
+   		exec("#{@daemon} remove #{directory_path}")
+   	end
+ 	 end
+ end
 end

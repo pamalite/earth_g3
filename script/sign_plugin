@@ -96,7 +96,7 @@ class SignPluginCommand
       $stderr.puts "No plugin to sign."
       exit
     end if
-    
+
     plugin_manager = PluginManager.new
 
     password = read_password("Enter password for key #{@options.key_file}: ")

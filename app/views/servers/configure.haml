@@ -1,0 +1,65 @@
+-# Copyright (C) 2007 Rising Sun Pictures and Matthew Landauer
+-# 
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-# 
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-# 
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+%h1 Configuring Daemon
+= error_messages_for :server
+%p
+  %b Server
+  = @server.name
+
+%p
+  %b Status
+  = daemon_status(@server)
+  = daemon_info(@server)
+
+
+- remote_form_for(:server, :url => url_for(:action => :startdaemon, :params => {:id => @server.id }), :html => { :multipart => false}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Start daemon          ", :id => "start_daemon_button",   :disabled => "true"
+  - else
+    %p= submit_tag "Start daemon          ", :id => "start_daemon_button",   :onclick => "refreshDelay()"
+
+
+- remote_form_for(:server, :url => url_for(:action => :stopdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Stop daemon          ", :id => "stop_daemon_button",    :onclick => "refreshNow()"
+  - else
+    %p= submit_tag "Stop daemon          ", :id => "stop_daemon_button",    :disabled => "true"
+
+
+- remote_form_for(:server, :url => url_for(:action => :restartdaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button", :onclick => "refreshDelay()"
+  - else
+    %p= submit_tag "Restart daemon      ", :id => "restart_daemon_button", :disabled => "true"
+
+
+- remote_form_for(:server, :url => url_for(:action => :cleardaemon, :params => {:id => @server.id }), :html => { :multipart => true}) do |f|
+  - if daemon_alive(@server)
+    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button",   :disabled => "true"
+  - else
+    %p= submit_tag "Clear daemon data ", :id => "clear_daemon_button",   :onclick => "refreshDelay()"
+
+
+%p{:id => 'daemon_status_message'}
+
+
+
+= link_to 'Show', :action => :show, :params => {:server => @server.name}
+|
+= link_to 'Back', servers_path
+

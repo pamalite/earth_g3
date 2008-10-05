@@ -17,7 +17,7 @@ class CreateTagSupportTables < ActiveRecord::Migration
   
   def self.down
     drop_table :tag
-    drop_table :filetag
+    drop_table :file_tag
   end  
 end
 
